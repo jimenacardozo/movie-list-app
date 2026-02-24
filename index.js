@@ -1,5 +1,9 @@
 import { CONFIG } from "./config.js";
 
+let totalPages = 1;
+let currentPage = 1;
+let content = document.getElementById("content");
+
 async function getHeroContent(params) {
     try {
         const dayTrendingMovies = await fetchDailyTrendingMovies();
@@ -83,4 +87,57 @@ function renderHero(movie) {
 document.addEventListener('DOMContentLoaded', async () => {
     const movieData = await getHeroContent();
     renderHero(movieData);
+    fetchTrendingMovies(currentPage);
 });
+
+
+async function fetchTrendingMovies(page) {
+    try {
+        const res = await fetch(
+            `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
+            {
+                method: "GET",
+                headers: {
+                    accept: "application/json",
+                    Authorization: `Bearer ${CONFIG.API_KEY}`,
+                },
+            },
+        );
+
+        if (!res.ok) throw new Error("Error fetching movies");
+        let trendingMovies = await res.json();
+        console.log(trendingMovies);
+
+        try {
+            totalPages = trendingMovies.total_pages;
+        } catch (error) {
+            console.error("Could not fetch total pages");
+        }
+
+        try {
+            page = trendingMovies.page;
+        } catch (error) {
+            console.error("Could not fetch total pages");
+        }
+
+        let htmlContent = "";
+
+        if (trendingMovies.results.size < 0) {
+            htmlContent = "<p>No movies found</p>";
+        }
+
+        trendingMovies.results.forEach((element) => {
+            console.log(element.title);
+
+            htmlContent += `
+            <div class="card">
+                <h2>${element.title}</h2>
+            </div>`;
+        });
+
+        content.innerHTML = htmlContent;
+        console.log(content.innerHTML);
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
+}
