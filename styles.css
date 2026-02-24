@@ -1,0 +1,27 @@
+html {
+    background-color: #232426;
+    font-family: 'Geist', sans-serif;
+}
+
+.logo {
+    width: 30px;
+    height: 30px;
+    margin: 0.7rem;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+footer span {
+    color: white;
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+}
