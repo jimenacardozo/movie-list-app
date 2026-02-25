@@ -171,26 +171,29 @@ async function fetchTrendingMovies(page) {
 
         let htmlContent = '';
 
-        if (trendingMovies.results.size < 0) {
+        if (trendingMovies.results.length <= 0) {
             htmlContent = '<p>No movies found</p>';
         }
 
         trendingMovies.results.forEach((element) => {
             let year = element.release_date.split('-')[0];
             htmlContent += `
-            <div class='movie-card'>
-                <img src='https://image.tmdb.org/t/p/original${element.poster_path}' alt='${element.title}' />
-                <h2>${element.title}</h2>
-                <span class='movie-card-release-date'>${year}</span>
-                <div class='genre-labels'>`;
+                <div class='movie-card'>
+                    <div class='movie-card-image-container'>
+                        <div class='movie-rating-tag'>&#x2605 ${element.vote_average}</div>
+                        <img src='https://image.tmdb.org/t/p/original${element.poster_path}' alt='${element.title}' />
+                    </div>
+                    <h2>${element.title}</h2>
+                    <span class='movie-card-release-date'>${year}</span>
+                    <div class='genre-labels'>`;
 
             element.genre_ids.forEach((genreId) => {
                 htmlContent += `<span class='genre-label'>${genres[genreId]}</span>`;
             });
 
             htmlContent += `
-                </div>
-            </div>`;
+                    </div>
+                </div>`;
         });
 
         content.innerHTML = htmlContent;
