@@ -1,5 +1,5 @@
 html {
-    background-color: black;
+    background-color: #060709;
     font-family: 'Geist', sans-serif;
 }
 
@@ -27,11 +27,17 @@ footer span {
 }
 
 .movie-card {
-    border: 1px solid white;
+    background-color: #0E1011;
+    border: 1px solid #232426;
     border-radius: 12px;
-    margin: 2rem;
+    margin: 1rem;
+    width: 11rem;
+}
+
+.movie-card h2{
+    padding-left: 0.3rem;
+    font-size: 1rem; 
     color: white;
-    width: 8rem;
 }
 
 #hero {
@@ -180,7 +186,15 @@ footer span {
     width: 100%;
 }
 
+.movie-card span {
+    font-size: 0.8rem;
+    color: #7D7D7F;
+}
 
+.movie-card-release-date {
+    padding-left: 0.3rem;
+    
+}
 .content-area {
     display: flex;
     flex-direction: column;
@@ -202,8 +216,10 @@ footer span {
 }
 
 .genre-label {
-    border: 1px solid white;
+    border: 1px solid #232426;
     border-radius: 12px;
-    padding: 5px;
-    margin: 3px;
+    color: #7D7D7F;
+    background-color: #0E0F11;
+    padding: 0.3rem;
+    margin: 0.3rem;
 }
