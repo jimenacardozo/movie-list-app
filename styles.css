@@ -27,17 +27,20 @@ footer span {
 }
 
 .movie-card {
-    background-color: #0E1011;
+    background-color: #0e1011;
     border: 1px solid #232426;
     border-radius: 12px;
     margin: 1rem;
     width: 11rem;
+    overflow: hidden;
 }
 
-.movie-card h2{
+.movie-card h2 {
     padding-left: 0.3rem;
-    font-size: 1rem; 
+    font-size: 1rem;
     color: white;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
 }
 
 #hero {
@@ -188,11 +191,11 @@ footer span {
 
 .movie-card span {
     font-size: 0.8rem;
-    color: #7D7D7F;
+    color: #7d7d7f;
 }
 
 .movie-card-release-date {
-    padding-left: 0.3rem;    
+    padding-left: 0.3rem;
 }
 .content-area {
     display: flex;
@@ -202,11 +205,7 @@ footer span {
 .content {
     display: flex;
     flex-wrap: wrap;
-}
-
-.page-selector{
-    display: flex;
-    align-self: center;
+    justify-content: center;
 }
 
 .genre-labels {
@@ -217,8 +216,8 @@ footer span {
 .genre-label {
     border: 1px solid #232426;
     border-radius: 12px;
-    color: #7D7D7F;
-    background-color: #0E0F11;
+    color: #7d7d7f;
+    background-color: #0e0f11;
     padding: 0.3rem;
     margin: 0.3rem;
 }
