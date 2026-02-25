@@ -26,7 +26,8 @@ footer span {
     color: white;
 }
 
-.card {
+.movie-card {
+    margin: 2rem;
     color: white;
 }
 
@@ -170,4 +171,24 @@ footer span {
         gap: 1.5rem;
         justify-content: flex-start;
     }
+}
+
+.movie-card img {
+    width: 100%;
+}
+
+
+.content-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.page-selector{
+    display: flex;
+    align-self: center;
 }
