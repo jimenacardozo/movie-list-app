@@ -25,3 +25,22 @@ footer span {
     text-decoration: none;
     color: white;
 }
+
+#hero {
+    padding: 2rem;
+    display: flex;
+}
+
+.hero-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+}
+
+.hero-image {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 12px;
+    height: auto;
+}
