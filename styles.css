@@ -105,10 +105,48 @@ footer span {
 }
 
 .button-trailer {
+    color: black;
     text-decoration: none;
     font-weight: 500;
     background-color: #e97c48;
     padding: 0.8rem;
     border-radius: 12px;
     display: inline-block;
+}
+
+@media screen and (min-width: 1024px) {
+    #hero {
+        justify-content: flex-start;
+        padding-left: 10%;
+    }
+
+    .hero-content {
+        justify-content: flex-start;
+        gap: 4rem;
+        max-width: 1400px;
+    }
+
+    .hero-image{
+        max-width: 400px;
+    }
+
+    .hero-info {
+        align-items: flex-start;
+        max-width: 800px;
+    }
+
+    .hero-description {
+        text-align: start;
+        font-size: 1.2rem;
+    }
+
+    .hero-info h1 {
+        font-size: 4rem; 
+        text-align: left;
+    }
+
+    .details {
+        gap: 1.5rem;
+        justify-content: flex-start;
+    }
 }
