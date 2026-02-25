@@ -21,7 +21,7 @@ async function fetchGenres() {
         const response = await res.json();
 
         const responseGenres = response.genres;
-        
+
         console.log(`responseGenres = ${responseGenres}`);
 
         for (const genre of responseGenres) {
@@ -180,7 +180,7 @@ async function fetchTrendingMovies(page) {
             <div class='movie-card'>
                 <img src='https://image.tmdb.org/t/p/original${element.poster_path}' alt='${element.title}' />
                 <h2>${element.title}</h2>
-                <span>${element.release_date}</span>
+                <span class='movie-card-release-date'>${element.release_date}</span>
                 <div class='genre-labels'>`;
 
             element.genre_ids.forEach((genreId) => {
