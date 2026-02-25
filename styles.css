@@ -26,6 +26,10 @@ footer span {
     color: white;
 }
 
+.card {
+    color: white;
+}
+
 #hero {
     padding: 2rem;
     display: flex;

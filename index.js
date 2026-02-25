@@ -2,7 +2,11 @@ import { CONFIG } from "./config.js";
 
 let totalPages = 1;
 let currentPage = 1;
-let content = document.getElementById("content");
+let nextPage = Math.min(currentPage + 1, totalPages);
+let content = document.getElementById("content-grid");
+
+document.getElementById("page-selector-previous-page").innerText = currentPage;
+document.getElementById("page-selector-next-page").innerText = nextPage;
 
 async function getHeroContent(params) {
     try {
@@ -127,7 +131,6 @@ async function fetchTrendingMovies(page) {
         }
 
         trendingMovies.results.forEach((element) => {
-            console.log(element.title);
 
             htmlContent += `
             <div class="card">
@@ -136,7 +139,7 @@ async function fetchTrendingMovies(page) {
         });
 
         content.innerHTML = htmlContent;
-        console.log(content.innerHTML);
+        
     } catch (error) {
         console.error("An error occurred:", error);
     }
