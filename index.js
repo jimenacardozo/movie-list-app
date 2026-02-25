@@ -134,26 +134,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetchGenres();
     const movieData = await getHeroContent();
     await renderHero(movieData);
-    await fetchTrendingMovies(currentPage);
+    await showTrendingMovies(currentPage);
 });
 
 
-async function fetchTrendingMovies(page) {
+async function showTrendingMovies(page) {
     try {
-        const res = await fetch(
-            `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
-            {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${CONFIG.API_KEY}`,
-                },
-            },
-        );
-
-        if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
-
-        let trendingMovies = await res.json();
+        let trendingMovies = await fetchTrendingMovies(page);
 
         try {
             totalPages = trendingMovies.total_pages;
@@ -176,6 +163,24 @@ async function fetchTrendingMovies(page) {
         console.error("An error occurred:", error);
         content.innerHTML = "<p class='fallback-message'>An error occurred while fetching movies. Try again later.</p>";
     }
+}
+
+async function fetchTrendingMovies(page) {
+    const res = await fetch(
+        `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
+        {
+            method: "GET",
+            headers: {
+                accept: "application/json",
+                Authorization: `Bearer ${CONFIG.API_KEY}`,
+            },
+        }
+    );
+
+    if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
+
+    let trendingMovies = await res.json();
+    return trendingMovies;
 }
 
 function setPageSelectorValues() {
