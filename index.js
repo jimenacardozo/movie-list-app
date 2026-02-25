@@ -215,7 +215,7 @@ function renderMovieCards(movies) {
     }
 
     movies.results.forEach((element) => {
-        let year = element.release_date.split("-")[0];
+        const year = element.release_date.split("-")[0];
         htmlContent += `
                 <div class='movie-card'>
                     <div class='movie-card-image-container'>
