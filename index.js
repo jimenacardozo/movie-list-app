@@ -4,6 +4,35 @@ let totalPages = 1;
 let currentPage = 1;
 let nextPage = Math.min(currentPage + 1, totalPages);
 let content = document.getElementById('content-grid');
+let genres = {};
+
+async function fetchGenres() {
+    try {
+        const res = await fetch('https://api.themoviedb.org/3/genre/movie/list', {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${CONFIG.API_KEY}`,
+            },
+        });
+
+        if (!res.ok) throw new Error('Error fetching genres');
+
+        const response = await res.json();
+
+        const responseGenres = response.genres;
+        
+        console.log(`responseGenres = ${responseGenres}`);
+
+        for (const genre of responseGenres) {
+            console.log(`genre: ${genre}`);
+            genres[genre.id] = genre.name; 
+        }
+
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+}
 
 document.getElementById('previous-page').addEventListener('click', () => {
     if (currentPage > 1) {
@@ -98,9 +127,10 @@ function renderHero(movie) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    await fetchGenres();
     const movieData = await getHeroContent();
-    renderHero(movieData);
-    fetchTrendingMovies(currentPage);
+    await renderHero(movieData);
+    await fetchTrendingMovies(currentPage);
 });
 
 
@@ -153,8 +183,8 @@ async function fetchTrendingMovies(page) {
                 <span>${element.release_date}</span>
                 <div class='genre-labels'>`;
 
-            element.genre_ids.forEach((genre) => {
-                htmlContent += `<span class='genre-label'>${genre}</span>`;
+            element.genre_ids.forEach((genreId) => {
+                htmlContent += `<span class='genre-label'>${genres[genreId]}</span>`;
             });
 
             htmlContent += `
