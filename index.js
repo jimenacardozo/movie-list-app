@@ -19,7 +19,7 @@ async function fetchHeroMovie(params) {
         }
         });
         const movieDetails = await resDetail.json();
-        const rating = movieDetails.vote_average;     
+        const rating = movieDetails.vote_average.toFixed(1);     
         const releaseYear = movieDetails.release_date.slice(0,4);
         const hours = Math.floor(movieDetails.runtime/60);  
         const mins = movieDetails.runtime%60;
@@ -46,7 +46,7 @@ async function fetchHeroMovie(params) {
                     <span class="rating">★ ${rating}</span>
                     <span class="year">${releaseYear}</span>
                     <span class="duration"> ◴ ${hours}h ${mins}m</span>
-                    <span class="genres">${genres}</span>
+                    <div class="genres">${genres}</div>
                 </div>
                 <p class="hero-description">${heroMovie.overview}</p>
                 ${trailer ? `<a href = "${trailerURL}" target=_"blank" class="button-trailer">▶ Watch Trailer</a>`: ''}
