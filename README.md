@@ -8,3 +8,4 @@ This project uses the [TMDB API](https://developer.themoviedb.org/docs/getting-s
 * `GET /trending/movie/day`: To fetch the daily trending movies for the Hero section.
 * `GET /movie/{id}`: To get detailed information (runtime, genres, etc.) about a specific movie.
 * **Images:** `https://image.tmdb.org/t/p/` Used to display posters.
+* `GET /movie/{id}/videos`: Used to get trailers and clips related to the movie.
