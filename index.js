@@ -1,22 +1,25 @@
-import { CONFIG } from './config.js';
+import { CONFIG } from "./config.js";
 
 let totalPages = 1;
 let currentPage = 1;
 let nextPage = Math.min(currentPage + 1, totalPages);
-let content = document.getElementById('content-grid');
+let content = document.getElementById("content-grid");
 let genres = {};
 
 async function fetchGenres() {
     try {
-        const res = await fetch('https://api.themoviedb.org/3/genre/movie/list', {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${CONFIG.API_KEY}`,
+        const res = await fetch(
+            "https://api.themoviedb.org/3/genre/movie/list",
+            {
+                method: "GET",
+                headers: {
+                    accept: "application/json",
+                    Authorization: `Bearer ${CONFIG.API_KEY}`,
+                },
             },
-        });
+        );
 
-        if (!res.ok) throw new Error('Error fetching genres');
+        if (!res.ok) throw new Error("Error fetching genres");
 
         const response = await res.json();
 
@@ -26,21 +29,22 @@ async function fetchGenres() {
 
         for (const genre of responseGenres) {
             console.log(`genre: ${genre}`);
-            genres[genre.id] = genre.name; 
+            genres[genre.id] = genre.name;
         }
-
     } catch (error) {
-        console.error('An error occurred:', error);
+        console.error("An error occurred:", error);
     }
 }
 
-document.getElementById('previous-page-button').addEventListener('click', () => {
-    if (currentPage > 1) {
-        fetchTrendingMovies(currentPage - 1);
-    }
-});
+document
+    .getElementById("previous-page-button")
+    .addEventListener("click", () => {
+        if (currentPage > 1) {
+            fetchTrendingMovies(currentPage - 1);
+        }
+    });
 
-document.getElementById('next-page-button').addEventListener('click', () => {
+document.getElementById("next-page-button").addEventListener("click", () => {
     if (currentPage < totalPages) {
         fetchTrendingMovies(currentPage + 1);
     }
@@ -126,7 +130,7 @@ function renderHero(movie) {
     `;
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
     await fetchGenres();
     const movieData = await getHeroContent();
     await renderHero(movieData);
@@ -139,45 +143,75 @@ async function fetchTrendingMovies(page) {
         const res = await fetch(
             `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
             {
-                method: 'GET',
+                method: "GET",
                 headers: {
-                    accept: 'application/json',
+                    accept: "application/json",
                     Authorization: `Bearer ${CONFIG.API_KEY}`,
                 },
             },
         );
 
-        if (!res.ok) throw new Error('Error fetching movies');
+        if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
+
         let trendingMovies = await res.json();
-        console.log(trendingMovies);
 
         try {
             totalPages = trendingMovies.total_pages;
         } catch (error) {
-            console.error('Could not fetch total pages');
+            console.error("Could not fetch total pages");
         }
 
         try {
             currentPage = trendingMovies.page;
             nextPage = currentPage + 1;
         } catch (error) {
-            console.error('Could not fetch current page');
+            console.error("Could not fetch current page");
         }
 
-        document.getElementById('page-selector-previous-page').innerText =
-            currentPage;
+        setPageSelectorValues();
 
-        document.getElementById('page-selector-next-page').innerText = nextPage;
+        renderMovieCards(trendingMovies);
 
-        let htmlContent = '';
+    } catch (error) {
+        console.error("An error occurred:", error);
+        content.innerHTML = "<p class='fallback-message'>An error occurred while fetching movies. Try again later.</p>";
+    }
+}
 
-        if (trendingMovies.results.length <= 0) {
-            htmlContent = '<p>No movies found</p>';
-        }
+function setPageSelectorValues() {
 
-        trendingMovies.results.forEach((element) => {
-            let year = element.release_date.split('-')[0];
-            htmlContent += `
+    if (currentPage === 1) {
+        document.getElementById("previous-page-button").disabled = true;
+    } else {
+        document.getElementById("previous-page-button").disabled = false;
+    }
+
+    if (currentPage === totalPages) {
+        document.getElementById("next-page-button").disabled = true;
+        document.getElementById("page-selector-previous-page").classList.remove('selector-selected');
+        document.getElementById("page-selector-next-page").classList.add('selector-selected');
+    } else {
+        document.getElementById("page-selector-previous-page").classList.add('selector-selected');
+        document.getElementById("page-selector-next-page").classList.remove('selector-selected');
+        document.getElementById("next-page-button").disabled = false;
+    }
+
+    document.getElementById("page-selector-previous-page").innerText =
+        currentPage;
+
+    document.getElementById("page-selector-next-page").innerText = nextPage;
+}
+
+function renderMovieCards(movies) {
+    let htmlContent = "";
+
+    if (movies.results.length <= 0) {
+        htmlContent = "<p class='fallback-message'>No movies found</p>";
+    }
+
+    movies.results.forEach((element) => {
+        let year = element.release_date.split("-")[0];
+        htmlContent += `
                 <div class='movie-card'>
                     <div class='movie-card-image-container'>
                         <div class='movie-rating-tag'>&#x2605 ${element.vote_average}</div>
@@ -187,17 +221,14 @@ async function fetchTrendingMovies(page) {
                     <span class='movie-card-release-date'>${year}</span>
                     <div class='genre-labels'>`;
 
-            element.genre_ids.forEach((genreId) => {
-                htmlContent += `<span class='genre-label'>${genres[genreId]}</span>`;
-            });
-
-            htmlContent += `
-                    </div>
-                </div>`;
+        element.genre_ids.forEach((genreId) => {
+            htmlContent += `<span class='genre-label'>${genres[genreId]}</span>`;
         });
 
-        content.innerHTML = htmlContent;
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
+        htmlContent += `
+                    </div>
+                </div>`;
+    });
+
+    content.innerHTML = htmlContent;
 }
