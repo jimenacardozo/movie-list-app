@@ -34,13 +34,13 @@ async function fetchGenres() {
     }
 }
 
-document.getElementById('previous-page').addEventListener('click', () => {
+document.getElementById('previous-page-button').addEventListener('click', () => {
     if (currentPage > 1) {
         fetchTrendingMovies(currentPage - 1);
     }
 });
 
-document.getElementById('next-page').addEventListener('click', () => {
+document.getElementById('next-page-button').addEventListener('click', () => {
     if (currentPage < totalPages) {
         fetchTrendingMovies(currentPage + 1);
     }
@@ -176,11 +176,12 @@ async function fetchTrendingMovies(page) {
         }
 
         trendingMovies.results.forEach((element) => {
+            let year = element.release_date.split('-')[0];
             htmlContent += `
             <div class='movie-card'>
                 <img src='https://image.tmdb.org/t/p/original${element.poster_path}' alt='${element.title}' />
                 <h2>${element.title}</h2>
-                <span class='movie-card-release-date'>${element.release_date}</span>
+                <span class='movie-card-release-date'>${year}</span>
                 <div class='genre-labels'>`;
 
             element.genre_ids.forEach((genreId) => {
