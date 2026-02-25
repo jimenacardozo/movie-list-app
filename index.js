@@ -219,7 +219,7 @@ function renderMovieCards(movies) {
         htmlContent += `
                 <div class='movie-card'>
                     <div class='movie-card-image-container'>
-                        <div class='movie-rating-tag'>&#x2605 ${element.vote_average}</div>
+                        <div class='movie-rating-tag'>&#x2605 ${element.vote_average.toFixed(1)}</div>
                         <img src='https://image.tmdb.org/t/p/original${element.poster_path}' alt='${element.title}' />
                     </div>
                     <h2>${element.title}</h2>
