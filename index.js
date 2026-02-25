@@ -147,7 +147,8 @@ async function fetchTrendingMovies(page) {
 
         trendingMovies.results.forEach((element) => {
             htmlContent += `
-            <div class="card">
+            <div class="movie-card">
+                <img src="https://image.tmdb.org/t/p/original${element.poster_path}" alt="${element.title}" />
                 <h2>${element.title}</h2>
             </div>`;
         });
