@@ -5,8 +5,17 @@ let currentPage = 1;
 let nextPage = Math.min(currentPage + 1, totalPages);
 let content = document.getElementById("content-grid");
 
-document.getElementById("page-selector-previous-page").innerText = currentPage;
-document.getElementById("page-selector-next-page").innerText = nextPage;
+document.getElementById("previous-page").addEventListener("click", () => {
+    if (currentPage > 1) {
+        fetchTrendingMovies(currentPage - 1);
+    }
+});
+
+document.getElementById("next-page").addEventListener("click", () => {
+    if (currentPage < totalPages) {
+        fetchTrendingMovies(currentPage + 1);
+    }
+});
 
 async function getHeroContent(params) {
     try {
@@ -119,10 +128,16 @@ async function fetchTrendingMovies(page) {
         }
 
         try {
-            page = trendingMovies.page;
+            currentPage = trendingMovies.page;
+            nextPage = currentPage + 1;
         } catch (error) {
-            console.error("Could not fetch total pages");
+            console.error("Could not fetch current page");
         }
+
+        document.getElementById("page-selector-previous-page").innerText =
+            currentPage;
+
+        document.getElementById("page-selector-next-page").innerText = nextPage;
 
         let htmlContent = "";
 
@@ -131,7 +146,6 @@ async function fetchTrendingMovies(page) {
         }
 
         trendingMovies.results.forEach((element) => {
-
             htmlContent += `
             <div class="card">
                 <h2>${element.title}</h2>
@@ -139,7 +153,6 @@ async function fetchTrendingMovies(page) {
         });
 
         content.innerHTML = htmlContent;
-        
     } catch (error) {
         console.error("An error occurred:", error);
     }
