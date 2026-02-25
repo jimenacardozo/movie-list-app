@@ -40,13 +40,13 @@ document
     .getElementById("previous-page-button")
     .addEventListener("click", () => {
         if (currentPage > 1) {
-            fetchTrendingMovies(currentPage - 1);
+            showTrendingMovies(currentPage - 1);
         }
     });
 
 document.getElementById("next-page-button").addEventListener("click", () => {
     if (currentPage < totalPages) {
-        fetchTrendingMovies(currentPage + 1);
+        showTrendingMovies(currentPage + 1);
     }
 });
 
