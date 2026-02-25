@@ -98,10 +98,11 @@ footer span {
     font-weight: 800;
 }
 
-.genres {
+.genre {
     border: 0.8px solid grey;
     padding: 0.2rem 0.6rem;
     border-radius: 8px;
+    margin: 0.1rem;
 }
 
 .button-trailer {
