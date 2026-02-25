@@ -37,6 +37,7 @@ footer span {
 
 .movie-card h2 {
     padding-left: 0.3rem;
+    padding-right: 0.3rem;
     font-size: 1rem;
     color: white;
     margin-top: 0.3rem;
@@ -221,8 +222,21 @@ footer span {
     padding: 0.3rem;
     margin: 0.3rem;
 }
-
-
+.movie-card-image-container {
+    position: relative;
+}
+.movie-rating-tag {
+    position: absolute;
+    right: 0;
+    border: 1px solid #232426;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #E57C46;
+    background-color: #0F0C10;
+    padding: 0.3rem;
+    margin: 0.3rem;
+}
 
 .page-change-button {
     font-size: 0.9rem;
