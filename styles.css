@@ -27,8 +27,11 @@ footer span {
 }
 
 .movie-card {
+    border: 1px solid white;
+    border-radius: 12px;
     margin: 2rem;
     color: white;
+    width: 8rem;
 }
 
 #hero {
@@ -191,4 +194,16 @@ footer span {
 .page-selector{
     display: flex;
     align-self: center;
+}
+
+.genre-labels {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.genre-label {
+    border: 1px solid white;
+    border-radius: 12px;
+    padding: 5px;
+    margin: 3px;
 }

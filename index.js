@@ -1,17 +1,17 @@
-import { CONFIG } from "./config.js";
+import { CONFIG } from './config.js';
 
 let totalPages = 1;
 let currentPage = 1;
 let nextPage = Math.min(currentPage + 1, totalPages);
-let content = document.getElementById("content-grid");
+let content = document.getElementById('content-grid');
 
-document.getElementById("previous-page").addEventListener("click", () => {
+document.getElementById('previous-page').addEventListener('click', () => {
     if (currentPage > 1) {
         fetchTrendingMovies(currentPage - 1);
     }
 });
 
-document.getElementById("next-page").addEventListener("click", () => {
+document.getElementById('next-page').addEventListener('click', () => {
     if (currentPage < totalPages) {
         fetchTrendingMovies(currentPage + 1);
     }
@@ -109,52 +109,61 @@ async function fetchTrendingMovies(page) {
         const res = await fetch(
             `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
             {
-                method: "GET",
+                method: 'GET',
                 headers: {
-                    accept: "application/json",
+                    accept: 'application/json',
                     Authorization: `Bearer ${CONFIG.API_KEY}`,
                 },
             },
         );
 
-        if (!res.ok) throw new Error("Error fetching movies");
+        if (!res.ok) throw new Error('Error fetching movies');
         let trendingMovies = await res.json();
         console.log(trendingMovies);
 
         try {
             totalPages = trendingMovies.total_pages;
         } catch (error) {
-            console.error("Could not fetch total pages");
+            console.error('Could not fetch total pages');
         }
 
         try {
             currentPage = trendingMovies.page;
             nextPage = currentPage + 1;
         } catch (error) {
-            console.error("Could not fetch current page");
+            console.error('Could not fetch current page');
         }
 
-        document.getElementById("page-selector-previous-page").innerText =
+        document.getElementById('page-selector-previous-page').innerText =
             currentPage;
 
-        document.getElementById("page-selector-next-page").innerText = nextPage;
+        document.getElementById('page-selector-next-page').innerText = nextPage;
 
-        let htmlContent = "";
+        let htmlContent = '';
 
         if (trendingMovies.results.size < 0) {
-            htmlContent = "<p>No movies found</p>";
+            htmlContent = '<p>No movies found</p>';
         }
 
         trendingMovies.results.forEach((element) => {
             htmlContent += `
-            <div class="movie-card">
-                <img src="https://image.tmdb.org/t/p/original${element.poster_path}" alt="${element.title}" />
+            <div class='movie-card'>
+                <img src='https://image.tmdb.org/t/p/original${element.poster_path}' alt='${element.title}' />
                 <h2>${element.title}</h2>
+                <span>${element.release_date}</span>
+                <div class='genre-labels'>`;
+
+            element.genre_ids.forEach((genre) => {
+                htmlContent += `<span class='genre-label'>${genre}</span>`;
+            });
+
+            htmlContent += `
+                </div>
             </div>`;
         });
 
         content.innerHTML = htmlContent;
     } catch (error) {
-        console.error("An error occurred:", error);
+        console.error('An error occurred:', error);
     }
 }
