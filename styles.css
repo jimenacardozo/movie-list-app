@@ -222,9 +222,11 @@ footer span {
     padding: 0.3rem;
     margin: 0.3rem;
 }
+
 .movie-card-image-container {
     position: relative;
 }
+
 .movie-rating-tag {
     position: absolute;
     right: 0;
@@ -239,31 +241,32 @@ footer span {
 }
 
 .page-change-button {
+    color: white;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: none;
+    background-color: #060709;
+    cursor: pointer;
+}
+
+.page-change-button[disabled] {
+    cursor: default;
+    color: #7d7d7f;
     font-size: 0.9rem;
     text-decoration: none;
     border: none;
     background-color: #060709;
 }
 
-#next-page-button {
-    color: white;
-}
-
-#next-page-button:hover {
-    color: #7d7d7f;
-}
-
-#previous-page-button {
-    color: #7d7d7f;
-}
-
-#previous-page-button:hover {
-    color: white;
-}
-
 .page-selector {
+    padding: 0.2rem 0.7rem 0.2rem 0.7rem;
     font-size: 0.9rem;
     color: white;
     display: flex;
     align-self: center;
+}
+
+.selector-selected {
+    border: 2px solid #222325;
+    border-radius: 5px;
 }
