@@ -30,9 +30,16 @@ footer span {
     padding: 2rem;
     display: flex;
     justify-content: center;
+    min-height: 80vh;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    align-items: center;
 }
 
 .hero-content {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
@@ -95,4 +102,13 @@ footer span {
     border: 0.8px solid grey;
     padding: 0.2rem 0.6rem;
     border-radius: 8px;
+}
+
+.button-trailer {
+    text-decoration: none;
+    font-weight: 500;
+    background-color: #e97c48;
+    padding: 0.8rem;
+    border-radius: 12px;
+    display: inline-block;
 }

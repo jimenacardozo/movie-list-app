@@ -19,7 +19,6 @@ async function fetchHeroMovie(params) {
         }
         });
         const movieDetails = await resDetail.json();
-        console.log(movieDetails);
         const rating = movieDetails.vote_average;     
         const releaseYear = movieDetails.release_date.slice(0,4);
         const hours = Math.floor(movieDetails.runtime/60);  
@@ -27,6 +26,16 @@ async function fetchHeroMovie(params) {
         const genres = movieDetails.genres.map(genre =>`<span class="genre">${genre.name}</span>`).join(' ');
         const heroSection = document.querySelector('#hero');
         const imgUrl = `https://image.tmdb.org/t/p/w500${heroMovie.poster_path}`;
+        const resVideos = await fetch(`https://api.themoviedb.org/3/movie/${movieDetails.id}/videos`,{
+            headers: {
+            'Authorization': `Bearer ${CONFIG.API_KEY}`,
+            'accept': 'application/json' 
+            }
+        });
+        const videoData = await resVideos.json();
+        const trailer = videoData.results.find((vid => vid.type == 'Trailer' && vid.site === 'YouTube'));
+        const trailerURL = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '#';
+
         heroSection.innerHTML = `
         <div class="hero-content">
             <img class="hero-image" src="${imgUrl}" alt="${heroMovie.name}">
@@ -40,6 +49,7 @@ async function fetchHeroMovie(params) {
                     <span class="genres">${genres}</span>
                 </div>
                 <p class="hero-description">${heroMovie.overview}</p>
+                ${trailer ? `<a href = "${trailerURL}" target=_"blank" class="button-trailer">▶ Watch Trailer</a>`: ''}
             </div>
         </div>
         `
