@@ -185,24 +185,71 @@ function renderHero(movie) {
     if (!movie || !heroSection) return;
 
     heroSection.style.backgroundImage = `url(${movie.imgUrl})`;
-    heroSection.innerHTML = `
-        <div class="hero-background" style="--bg-image: url(${movie.imgUrl})"></div>
-        <div class="hero-content">
-            <img class="hero-image" src="${movie.imgUrl}" alt="${movie.title}">
-            <div class="hero-info">
-                <span class="trending-tag">#1 Trending</span>
-                <h1>${movie.title}</h1>
-                <div class="heroMovieDetails">
-                    <span class="rating">★ ${movie.rating}</span>
-                    <span class="year">${movie.releaseYear}</span>
-                    <span class="duration"> ◴ ${movie.duration}</span>
-                    <div class="genres">${movie.genres}</div>
-                </div>
-                <p class="hero-description">${movie.overview}</p>
-                ${movie.trailerURL ? `<a href="${movie.trailerURL}" target="_blank" class="button-trailer">▶ Watch Trailer</a>` : ''}
-            </div>
-        </div>
-    `;
+    const heroBackgroundDiv = document.createElement('div');
+    heroBackgroundDiv.classList.add('hero-background');
+    heroBackgroundDiv.style.setProperty('--bg-image', `url(${movie.imgUrl})`);
+    heroSection.appendChild(heroBackgroundDiv);
+
+    const heroContentDiv = document.createElement('div');
+    heroContentDiv.classList.add('hero-content');
+    heroSection.appendChild(heroContentDiv);
+
+    const heroImage = document.createElement('img');
+    heroImage.classList.add('hero-image');
+    heroImage.src = movie.imgUrl;
+    heroImage.alt = movie.title;
+    heroContentDiv.appendChild(heroImage);
+
+    const heroInfo = document.createElement('div');
+    heroInfo.classList.add('hero-info');
+    heroContentDiv.appendChild(heroInfo);
+
+    const trendingTag = document.createElement('span');
+    trendingTag.classList.add('trending-tag');
+    trendingTag.textContent = '#1 Trending';
+    heroInfo.appendChild(trendingTag);
+
+    const movieTitle = document.createElement('h1');
+    movieTitle.textContent = movie.title;
+    heroInfo.appendChild(movieTitle);
+
+    const heroMovieDetails = document.createElement('div');
+    heroMovieDetails.classList.add('hero-movie-details');
+    heroInfo.appendChild(heroMovieDetails);
+
+    const rating = document.createElement('span');
+    rating.classList.add('rating');
+    rating.textContent = `★ ${movie.rating}`;
+    heroMovieDetails.appendChild(rating);
+
+    const releaseYear = document.createElement('span');
+    releaseYear.classList.add('year');
+    releaseYear.textContent = movie.releaseYear;
+    heroMovieDetails.appendChild(releaseYear);
+
+    const duration = document.createElement('span');
+    duration.classList.add('duration');
+    duration.textContent = `◴ ${movie.duration}`;
+    heroMovieDetails.appendChild(duration);
+
+    const genresDiv = document.createElement('div');
+    genresDiv.classList.add('genres');
+    genresDiv.innerHTML = movie.genres;
+    heroMovieDetails.appendChild(genresDiv);
+
+    const description = document.createElement('p');
+    description.classList.add('hero-description');
+    description.textContent = movie.overview;
+    heroInfo.appendChild(description);
+
+    if (movie.trailerURL) {
+        const trailerButton = document.createElement('a');
+        trailerButton.href = movie.trailerURL;
+        trailerButton.target = '_blank';
+        trailerButton.classList.add('button-trailer');
+        trailerButton.textContent = '▶ Watch Trailer';
+        heroInfo.appendChild(trailerButton);
+    }
 }
 
 function renderMovieCards(movies) {
