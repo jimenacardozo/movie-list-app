@@ -3,7 +3,7 @@ import { CONFIG } from "./config.js";
 let totalPages = 1;
 let currentPage = 1;
 let nextPage = Math.min(currentPage + 1, totalPages);
-let content = document.getElementById("content-grid");
+const content = document.getElementById("content-grid");
 let genres = {};
 const nextPageButton = document.getElementById("next-page-button");
 const previousPageButton = document.getElementById("previous-page-button");
@@ -259,26 +259,54 @@ function renderMovieCards(movies) {
         htmlContent = "<p class='fallback-message'>No movies found</p>";
     }
 
-    movies.results.forEach((element) => {
-        const year = element.release_date.split("-")[0];
-        htmlContent += `
-                <div class='movie-card'>
-                    <div class='movie-card-image-container'>
-                        <div class='movie-rating-tag'>&#x2605 ${element.vote_average.toFixed(1)}</div>
-                        <img src='https://image.tmdb.org/t/p/original${element.poster_path}' alt='${element.title}' />
-                    </div>
-                    <h2>${element.title}</h2>
-                    <span class='movie-card-release-date'>${year}</span>
-                    <div class='genre-labels'>`;
+    movies.results.forEach((movie) => {
 
-        element.genre_ids.forEach((genreId) => {
-            htmlContent += `<span class='genre-label'>${genres[genreId]}</span>`;
-        });
+        const movieCard = createMovieCard(movie);
 
-        htmlContent += `
-                    </div>
-                </div>`;
+        content.appendChild(movieCard);
+    });
+}
+
+function createMovieCard(movie) {
+
+    const year = movie.release_date.split("-")[0];
+    const movieCard = document.createElement('div');
+    movieCard.classList.add('movie-card');
+
+    const movieImageContainer = document.createElement('div');
+    movieImageContainer.classList.add('movie-card-image-container');
+
+    const movieRatingTag = document.createElement('div');
+    movieRatingTag.classList.add('movie-rating-tag');
+    movieRatingTag.textContent = `★ ${movie.vote_average.toFixed(1)}`;
+
+    const movieImage = document.createElement('img');
+    movieImage.src = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+
+    movieImageContainer.appendChild(movieRatingTag);
+    movieImageContainer.appendChild(movieImage);
+
+    movieCard.appendChild(movieImageContainer);
+
+    const movieTitle = document.createElement('h2');
+    movieTitle.textContent = movie.title;
+    movieCard.appendChild(movieTitle);
+
+    const releaseDate = document.createElement('span');
+    releaseDate.classList.add('movie-card-release-date');
+    releaseDate.textContent = year;
+    movieCard.appendChild(releaseDate);
+
+    const genreLabels = document.createElement('div');
+    genreLabels.classList.add('genre-labels');
+
+    movie.genre_ids.forEach((genreId) => {
+        const genreLabel = document.createElement('span');
+        genreLabel.classList.add('genre-label');
+        genreLabel.textContent = genres[genreId];
+        genreLabels.appendChild(genreLabel);
     });
 
-    content.innerHTML = htmlContent;
+    movieCard.appendChild(genreLabels);
+    return movieCard;
 }
