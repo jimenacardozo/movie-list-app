@@ -29,8 +29,6 @@ async function fetchGenres() {
 
         const responseGenres = response.genres;
 
-        console.log(`responseGenres = ${responseGenres}`);
-
         for (const genre of responseGenres) {
             genres[genre.id] = genre.name;
         }
