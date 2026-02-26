@@ -30,7 +30,7 @@ nextPageButton.addEventListener("click", () => {
     }
 });
 
-async function getHeroContent(params) {
+async function getHeroContent() {
     try {
         const dayTrendingMovies = await fetchDailyTrendingMovies();
         const heroMovie = dayTrendingMovies.results[0];
