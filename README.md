@@ -2,6 +2,10 @@
 
 ## API Documentation
 
+### Description
+Web app to show the latest trending movies.
+
+### Service
 This project uses the [TMDB API](https://developer.themoviedb.org/docs/getting-started).
 
 ### Endpoints used:
@@ -10,3 +14,16 @@ This project uses the [TMDB API](https://developer.themoviedb.org/docs/getting-s
 * **Images:** `https://image.tmdb.org/t/p/` Used to display posters.
 * `GET /movie/{id}`: To get detailed information (runtime, genres, etc.) about a specific movie.
 * `GET /movie/{id}/videos`: Used to get trailers and clips related to the movie.
+
+### Setup for usage:
+
+Create a config.js file at the root folder with the following content:
+
+```
+export const CONFIG = {
+    API_KEY:
+        "your_api_key",
+};
+```
+
+To obtain your API key, follow the steps in https://developer.themoviedb.org/docs/getting-started.
