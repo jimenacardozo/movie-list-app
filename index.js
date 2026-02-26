@@ -58,7 +58,7 @@ function renderHero(movie) {
             <div class="hero-info">
                 <span class="trending-tag">#1 Trending</span>
                 <h1>${movie.title}</h1>
-                <div class="details">
+                <div class="heroMovieDetails">
                     <span class="rating">★ ${movie.rating}</span>
                     <span class="year">${movie.releaseYear}</span>
                     <span class="duration"> ◴ ${movie.duration}</span>

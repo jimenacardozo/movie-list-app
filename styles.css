@@ -101,7 +101,7 @@ footer span {
     color: grey;
 }
 
-.details {
+.heroMovieDetails {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
