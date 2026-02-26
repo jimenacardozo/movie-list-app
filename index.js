@@ -35,8 +35,9 @@ async function fetchHeroMovie(params) {
         const videoData = await resVideos.json();
         const trailer = videoData.results.find((vid => vid.type == 'Trailer' && vid.site === 'YouTube'));
         const trailerURL = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '#';
-
+        heroSection.style.backgroundImage = `url(${imgUrl})`;
         heroSection.innerHTML = `
+        <div class="hero-background" style="--bg-image: url(${imgUrl})"></div>
         <div class="hero-content">
             <img class="hero-image" src="${imgUrl}" alt="${heroMovie.name}">
             <div class="hero-info">
