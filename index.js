@@ -5,6 +5,10 @@ let currentPage = 1;
 let nextPage = Math.min(currentPage + 1, totalPages);
 let content = document.getElementById("content-grid");
 let genres = {};
+const nextPageButton = document.getElementById("next-page-button");
+const previousPageButton = document.getElementById("previous-page-button");
+const pageSelectorPreviousPage = document.getElementById("page-selector-previous-page");
+const pageSelectorNextPage = document.getElementById("page-selector-next-page");
 
 async function fetchGenres() {
     try {
@@ -28,7 +32,6 @@ async function fetchGenres() {
         console.log(`responseGenres = ${responseGenres}`);
 
         for (const genre of responseGenres) {
-            console.log(`genre: ${genre}`);
             genres[genre.id] = genre.name;
         }
     } catch (error) {
@@ -36,15 +39,14 @@ async function fetchGenres() {
     }
 }
 
-document
-    .getElementById("previous-page-button")
+previousPageButton
     .addEventListener("click", () => {
         if (currentPage > 1) {
             showTrendingMovies(currentPage - 1);
         }
     });
 
-document.getElementById("next-page-button").addEventListener("click", () => {
+nextPageButton.addEventListener("click", () => {
     if (currentPage < totalPages) {
         showTrendingMovies(currentPage + 1);
     }
@@ -186,25 +188,24 @@ async function fetchTrendingMovies(page) {
 function setPageSelectorValues() {
 
     if (currentPage === 1) {
-        document.getElementById("previous-page-button").disabled = true;
+        previousPageButton.disabled = true;
     } else {
-        document.getElementById("previous-page-button").disabled = false;
+        previousPageButton.disabled = false;
     }
 
     if (currentPage === totalPages) {
-        document.getElementById("next-page-button").disabled = true;
-        document.getElementById("page-selector-previous-page").classList.remove('selector-selected');
-        document.getElementById("page-selector-next-page").classList.add('selector-selected');
+        nextPageButton.disabled = true;
+        pageSelectorPreviousPage.classList.remove('selector-selected');
+        pageSelectorNextPage.classList.add('selector-selected');
     } else {
-        document.getElementById("page-selector-previous-page").classList.add('selector-selected');
-        document.getElementById("page-selector-next-page").classList.remove('selector-selected');
-        document.getElementById("next-page-button").disabled = false;
+        pageSelectorPreviousPage.classList.add('selector-selected');
+        pageSelectorNextPage.classList.remove('selector-selected');
+        nextPageButton.disabled = false;
     }
 
-    document.getElementById("page-selector-previous-page").innerText =
-        currentPage;
+    pageSelectorPreviousPage.innerText = currentPage;
 
-    document.getElementById("page-selector-next-page").innerText = nextPage;
+    pageSelectorNextPage.innerText = nextPage;
 }
 
 function renderMovieCards(movies) {
