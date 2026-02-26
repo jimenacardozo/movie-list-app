@@ -1,31 +1,11 @@
 import { CONFIG } from "./config.js";
 
-async function getHeroMovieData(params) {
+async function showHeroContent(params) {
     try {
-        const resTrending = await fetch ('https://api.themoviedb.org/3/trending/movie/day', {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Authorization': `Bearer ${CONFIG.API_KEY}`,
-            }
-        });
-        if (!resTrending.ok) throw new Error('Error fetching movies');
-        let data = await resTrending.json();
-        const heroMovie = data.results[0];
-        const resDetail = await fetch (`https://api.themoviedb.org/3/movie/${heroMovie.id}`, {
-            headers: {
-                'Authorization': `Bearer ${CONFIG.API_KEY}`,
-                'accept': 'application/json'
-        }
-        });
-        const movieDetails = await resDetail.json();
-        const resVideos = await fetch(`https://api.themoviedb.org/3/movie/${movieDetails.id}/videos`,{
-            headers: {
-            'Authorization': `Bearer ${CONFIG.API_KEY}`,
-            'accept': 'application/json' 
-            }
-        });
-        const videoData = await resVideos.json();
+        const dayTrendingMovies = await fetchDailyTrendingMovies();
+        const heroMovie = dayTrendingMovies.results[0];
+        const movieDetails = await fetchMovieDetails(heroMovie);
+        const videoData = await fetchMovieVideos(movieDetails);
         const trailer = videoData.results.find((vid => vid.type == 'Trailer' && vid.site === 'YouTube'));
         const heroSection = document.querySelector('#hero');
         const imgUrl = `https://image.tmdb.org/t/p/w500${heroMovie.poster_path}`;
@@ -44,6 +24,38 @@ async function getHeroMovieData(params) {
     } catch (error) {
         console.error('An error occurred:', error);
     }
+}
+
+async function fetchMovieDetails(heroMovie) {
+    let response = await fetch(`https://api.themoviedb.org/3/movie/${heroMovie.id}`, {
+        headers: {
+            'Authorization': `Bearer ${CONFIG.API_KEY}`,
+            'accept': 'application/json'
+        }
+    });
+    return response.json();
+}
+
+async function fetchDailyTrendingMovies() {
+    let response = await fetch('https://api.themoviedb.org/3/trending/movie/day', {
+        method: 'GET',
+        headers: {
+            'accept': 'application/json',
+            'Authorization': `Bearer ${CONFIG.API_KEY}`,
+        }
+    });
+    if (!response.ok) throw new Error('Error fetching movies');
+    return response.json();
+}
+
+async function fetchMovieVideos(movieDetails) {
+    let response = await fetch(`https://api.themoviedb.org/3/movie/${movieDetails.id}/videos`, {
+        headers: {
+            'Authorization': `Bearer ${CONFIG.API_KEY}`,
+            'accept': 'application/json'
+        }
+    });
+    return response.json();
 }
 
 function renderHero(movie) {
@@ -72,6 +84,6 @@ function renderHero(movie) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const movieData = await getHeroMovieData();
+    const movieData = await showHeroContent();
     renderHero(movieData);
 });
