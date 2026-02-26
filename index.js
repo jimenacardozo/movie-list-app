@@ -1,16 +1,13 @@
 import { CONFIG } from "./config.js";
 
-async function showHeroContent(params) {
+async function getHeroContent(params) {
     try {
         const dayTrendingMovies = await fetchDailyTrendingMovies();
         const heroMovie = dayTrendingMovies.results[0];
         const movieDetails = await fetchMovieDetails(heroMovie);
         const videoData = await fetchMovieVideos(movieDetails);
         const trailer = videoData.results.find((vid => vid.type == 'Trailer' && vid.site === 'YouTube'));
-        const heroSection = document.querySelector('#hero');
-        const imgUrl = `https://image.tmdb.org/t/p/w500${heroMovie.poster_path}`;
 
-        heroSection.style.backgroundImage = `url(${imgUrl})`;
         return {
             title: heroMovie.title,
             overview: heroMovie.overview,
@@ -84,6 +81,6 @@ function renderHero(movie) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const movieData = await showHeroContent();
+    const movieData = await getHeroContent();
     renderHero(movieData);
 });
