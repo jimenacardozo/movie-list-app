@@ -10,32 +10,12 @@ const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById("page-selector-previous-page");
 const pageSelectorNextPage = document.getElementById("page-selector-next-page");
 
-async function fetchGenres() {
-    try {
-        const res = await fetch(
-            "https://api.themoviedb.org/3/genre/movie/list",
-            {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${CONFIG.API_KEY}`,
-                },
-            },
-        );
-
-        if (!res.ok) throw new Error("Error fetching genres");
-
-        const response = await res.json();
-
-        const responseGenres = response.genres;
-
-        for (const genre of responseGenres) {
-            genres[genre.id] = genre.name;
-        }
-    } catch (error) {
-        console.error("An error occurred:", error);
-    }
-}
+document.addEventListener("DOMContentLoaded", async () => {
+    await fetchGenres();
+    const movieData = await getHeroContent();
+    await renderHero(movieData);
+    await showTrendingMovies(currentPage);
+});
 
 previousPageButton
     .addEventListener("click", () => {
@@ -105,38 +85,32 @@ async function fetchMovieVideos(movieDetails) {
     return response.json();
 }
 
-function renderHero(movie) {
-    const heroSection = document.querySelector('#hero');
-    if (!movie || !heroSection) return;
+async function fetchGenres() {
+    try {
+        const res = await fetch(
+            "https://api.themoviedb.org/3/genre/movie/list",
+            {
+                method: "GET",
+                headers: {
+                    accept: "application/json",
+                    Authorization: `Bearer ${CONFIG.API_KEY}`,
+                },
+            },
+        );
 
-    heroSection.style.backgroundImage = `url(${movie.imgUrl})`;
-    heroSection.innerHTML = `
-        <div class="hero-background" style="--bg-image: url(${movie.imgUrl})"></div>
-        <div class="hero-content">
-            <img class="hero-image" src="${movie.imgUrl}" alt="${movie.title}">
-            <div class="hero-info">
-                <span class="trending-tag">#1 Trending</span>
-                <h1>${movie.title}</h1>
-                <div class="heroMovieDetails">
-                    <span class="rating">★ ${movie.rating}</span>
-                    <span class="year">${movie.releaseYear}</span>
-                    <span class="duration"> ◴ ${movie.duration}</span>
-                    <div class="genres">${movie.genres}</div>
-                </div>
-                <p class="hero-description">${movie.overview}</p>
-                ${movie.trailerURL ? `<a href="${movie.trailerURL}" target="_blank" class="button-trailer">▶ Watch Trailer</a>` : ''}
-            </div>
-        </div>
-    `;
+        if (!res.ok) throw new Error("Error fetching genres");
+
+        const response = await res.json();
+
+        const responseGenres = response.genres;
+
+        for (const genre of responseGenres) {
+            genres[genre.id] = genre.name;
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
 }
-
-document.addEventListener("DOMContentLoaded", async () => {
-    await fetchGenres();
-    const movieData = await getHeroContent();
-    await renderHero(movieData);
-    await showTrendingMovies(currentPage);
-});
-
 
 async function showTrendingMovies(page) {
     try {
@@ -204,6 +178,31 @@ function setPageSelectorValues() {
     pageSelectorPreviousPage.innerText = currentPage;
 
     pageSelectorNextPage.innerText = nextPage;
+}
+
+function renderHero(movie) {
+    const heroSection = document.querySelector('#hero');
+    if (!movie || !heroSection) return;
+
+    heroSection.style.backgroundImage = `url(${movie.imgUrl})`;
+    heroSection.innerHTML = `
+        <div class="hero-background" style="--bg-image: url(${movie.imgUrl})"></div>
+        <div class="hero-content">
+            <img class="hero-image" src="${movie.imgUrl}" alt="${movie.title}">
+            <div class="hero-info">
+                <span class="trending-tag">#1 Trending</span>
+                <h1>${movie.title}</h1>
+                <div class="heroMovieDetails">
+                    <span class="rating">★ ${movie.rating}</span>
+                    <span class="year">${movie.releaseYear}</span>
+                    <span class="duration"> ◴ ${movie.duration}</span>
+                    <div class="genres">${movie.genres}</div>
+                </div>
+                <p class="hero-description">${movie.overview}</p>
+                ${movie.trailerURL ? `<a href="${movie.trailerURL}" target="_blank" class="button-trailer">▶ Watch Trailer</a>` : ''}
+            </div>
+        </div>
+    `;
 }
 
 function renderMovieCards(movies) {
