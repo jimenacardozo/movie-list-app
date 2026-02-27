@@ -85,10 +85,10 @@ export async function fetchGenres() {
 export async function fetchFilteredMovies(genreFilter, yearFilter) {
     let query = "";
     if (genreFilter !== "all") {
-        query += genreFilter;
+        query += `with_genres=${genreFilter}&`;
     }
     if (yearFilter !== "all") {
-        query += yearFilter;
+        query += `year=${yearFilter}`;
     }
 
     const res = await fetch (`https://api.themoviedb.org/3/discover/movie?${query}`,{
@@ -99,5 +99,7 @@ export async function fetchFilteredMovies(genreFilter, yearFilter) {
             }
         }
     );
-    return await res.json();
+
+    let response = await res.json();
+    return response;
 }
