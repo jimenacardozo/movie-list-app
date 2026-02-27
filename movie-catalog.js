@@ -14,14 +14,14 @@ const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById("page-selector-previous-page");
 const pageSelectorNextPage = document.getElementById("page-selector-next-page");
 const pageSelector = document.getElementById("page-selector");
+const genreSelector = document.getElementById('select-genre');
+const yearSelector = document.getElementById('select-year');
 
 
 document.addEventListener("DOMContentLoaded", async () => {
     movies = await fetchTrendingMovies(currentPage);
-});
-
-document.addEventListener("DOMContentLoaded", async () => {
     genres = await fetchGenres();
+    buildGenreSelector();
 });
 
 previousPageButton
@@ -104,3 +104,11 @@ function renderMovieCards(movies) {
     });
 }
 
+function buildGenreSelector() {
+    Object.entries(genres).forEach(([id, name]) => {
+        const genreOption = document.createElement('option');
+        genreOption.value = id;
+        genreOption.textContent = name;
+        genreSelector.appendChild(genreOption);
+    });
+}
