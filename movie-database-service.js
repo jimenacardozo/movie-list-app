@@ -81,3 +81,23 @@ export async function fetchGenres() {
         console.error("An error occurred:", error);
     }
 }
+
+export async function fetchFilteredMovies(genreFilter, yearFilter) {
+    let query = "";
+    if (genreFilter !== "all") {
+        query += genreFilter;
+    }
+    if (yearFilter !== "all") {
+        query += yearFilter;
+    }
+
+    const res = await fetch (`https://api.themoviedb.org/3/discover/movie?${query}`,{
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Bearer ${CONFIG.API_KEY}`,
+            }
+        }
+    );
+    return await res.json();
+}
