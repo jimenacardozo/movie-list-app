@@ -285,3 +285,10 @@ footer span {
     border: 2px solid #222325;
     border-radius: 5px;
 }
+
+.fallback-message {
+    color: #7d7d7f;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
