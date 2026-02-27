@@ -1,6 +1,7 @@
 import { fetchTrendingMovies } from "./movie-database-service.js";
 import { createMovieCard } from "./movie-card.js";
 import { fetchGenres } from "./movie-database-service.js";
+import { fetchFilteredMovies } from "./movie-database-service.js";
 
 let genres = {};
 
@@ -15,7 +16,8 @@ const pageSelectorNextPage = document.getElementById("page-selector-next-page");
 const pageSelector = document.getElementById("page-selector");
 const genreSelector = document.getElementById('select-genre');
 const yearSelector = document.getElementById('select-year');
-
+const genreFilter = "all";
+const yearFilter = "all";
 
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -24,8 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     buildYearSelector();
 });
 
-previousPageButton
-    .addEventListener("click", async () => {
+previousPageButton.addEventListener("click", async () => {
         if (currentPage > 1) {
             currentPage = currentPage - 1;
             let movies = await fetchTrendingMovies(currentPage);
@@ -40,6 +41,12 @@ nextPageButton.addEventListener("click", async () => {
         showMovieCatalog(movies);
     }
 });
+
+genreSelector.addEventListener("change", () => {
+    const selectedGenreId = genreSelector.value;
+    filterMovies(selectedGenreId);
+    renderMovieCards(movies);
+})
 
 export async function showMovieCatalog(movies) {
     try {
@@ -130,4 +137,8 @@ function buildYearSelector() {
         yearOption.textContent = year;
         yearSelector.appendChild(yearOption);
     }
+}
+
+async function filterMovies(){
+    movies = await fetchFilteredMovies(genreFilter, yearFilter);
 }
