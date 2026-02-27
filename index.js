@@ -2,6 +2,7 @@ import { CONFIG } from "./config.js";
 
 let totalPages = 1;
 let currentPage = 1;
+let trendingMovies = [];
 let nextPage = Math.min(currentPage + 1, totalPages);
 const content = document.getElementById("content-grid");
 let genres = {};
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const movieData = await getHeroContent();
     await renderHero(movieData);
     await showTrendingMovies(currentPage);
+
 });
 
 previousPageButton
@@ -114,7 +116,7 @@ async function fetchGenres() {
 
 async function showTrendingMovies(page) {
     try {
-        let trendingMovies = await fetchTrendingMovies(page);
+        trendingMovies = await fetchTrendingMovies(page);
 
         try {
             totalPages = trendingMovies.total_pages;
@@ -135,7 +137,7 @@ async function showTrendingMovies(page) {
 
     } catch (error) {
         console.error("An error occurred:", error);
-        content.innerHTML = "<p class='fallback-message'>An error occurred while fetching movies. Try again later.</p>";
+        content.innerHTML = "<p class='fallback-message'>An error occurred. Try again later.</p>";
     }
 }
 
@@ -253,10 +255,9 @@ function renderHero(movie) {
 }
 
 function renderMovieCards(movies) {
-    let htmlContent = "";
-
-    if (movies.results.length <= 0) {
-        htmlContent = "<p class='fallback-message'>No movies found</p>";
+    if (movies.length <= 0 || movies.results.length <= 0) {
+        content.innerHTML = "<p class='fallback-message'>No movies found</p>";
+        return;
     }
 
     movies.results.forEach((movie) => {
