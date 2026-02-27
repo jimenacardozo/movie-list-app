@@ -1,4 +1,4 @@
-import { fetchGenres } from "./index.js";
+import { fetchGenres } from "./movie-database-service.js";
 
 let genres = {};
 

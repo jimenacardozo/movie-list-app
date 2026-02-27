@@ -1,4 +1,4 @@
-import { CONFIG } from "./config.js";
+import { fetchTrendingMovies } from "./movie-database-service.js";
 import { showHeroSection } from "./hero-section.js";
 import { createMovieCard } from "./movie-card.js";
 
@@ -31,71 +31,6 @@ nextPageButton.addEventListener("click", () => {
     }
 });
 
-
-export async function fetchMovieDetails(heroMovie) {
-    let response = await fetch(`https://api.themoviedb.org/3/movie/${heroMovie.id}`, {
-        headers: {
-            'Authorization': `Bearer ${CONFIG.API_KEY}`,
-            'accept': 'application/json'
-        }
-    });
-    return response.json();
-}
-
-export async function fetchDailyTrendingMovies() {
-    let response = await fetch('https://api.themoviedb.org/3/trending/movie/day', {
-        method: 'GET',
-        headers: {
-            'accept': 'application/json',
-            'Authorization': `Bearer ${CONFIG.API_KEY}`,
-        }
-    });
-    if (!response.ok) throw new Error('Error fetching movies');
-    return response.json();
-}
-
-export async function fetchMovieVideos(movieDetails) {
-    let response = await fetch(`https://api.themoviedb.org/3/movie/${movieDetails.id}/videos`, {
-        headers: {
-            'Authorization': `Bearer ${CONFIG.API_KEY}`,
-            'accept': 'application/json'
-        }
-    });
-    return response.json();
-}
-
-export async function fetchGenres() {
-    try {
-        const res = await fetch(
-            "https://api.themoviedb.org/3/genre/movie/list",
-            {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${CONFIG.API_KEY}`,
-                },
-            },
-        );
-
-        if (!res.ok) throw new Error("Error fetching genres");
-
-        const response = await res.json();
-
-        const responseGenres = response.genres;
-
-        let genres = {};
-
-        for (const genre of responseGenres) {
-            genres[genre.id] = genre.name;
-        }
-
-        return genres;
-
-    } catch (error) {
-        console.error("An error occurred:", error);
-    }
-}
-
 async function showTrendingMovies(page) {
     try {
         trendingMovies = await fetchTrendingMovies(page);
@@ -124,24 +59,6 @@ async function showTrendingMovies(page) {
     }
 }
 
-async function fetchTrendingMovies(page) {
-    const res = await fetch(
-        `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
-        {
-            method: "GET",
-            headers: {
-                accept: "application/json",
-                Authorization: `Bearer ${CONFIG.API_KEY}`,
-            },
-        }
-    );
-
-    if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
-
-    trendingMovies = await res.json();
-    return trendingMovies;
-}
-
 function setPageSelectorValues() {
     pageSelector.style.display = 'flex';
 
@@ -165,7 +82,6 @@ function setPageSelectorValues() {
 
     pageSelectorNextPage.innerText = nextPage;
 }
-
 
 function renderMovieCards(movies) {
     if (movies.length <= 0 || movies.results.length <= 0) {
