@@ -14,7 +14,6 @@ export async function showHeroSection() {
     }
 }
 
-
 export async function getHeroContent() {
     try {
         const dayTrendingMovies = await fetchDailyTrendingMovies();
