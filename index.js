@@ -10,11 +10,12 @@ const nextPageButton = document.getElementById("next-page-button");
 const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById("page-selector-previous-page");
 const pageSelectorNextPage = document.getElementById("page-selector-next-page");
+const pageSelector = document.getElementById("page-selector");
 
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchGenres();
     const movieData = await getHeroContent();
-    await renderHero(movieData);
+    renderHero(movieData);
     await showTrendingMovies(currentPage);
 
 });
@@ -138,6 +139,7 @@ async function showTrendingMovies(page) {
     } catch (error) {
         console.error("An error occurred:", error);
         content.innerHTML = "<p class='fallback-message'>An error occurred. Try again later.</p>";
+        pageSelector.style.display = 'none';
     }
 }
 
@@ -155,11 +157,12 @@ async function fetchTrendingMovies(page) {
 
     if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
 
-    let trendingMovies = await res.json();
+    trendingMovies = await res.json();
     return trendingMovies;
 }
 
 function setPageSelectorValues() {
+    pageSelector.style.display = 'flex';
 
     if (currentPage === 1) {
         previousPageButton.disabled = true;
@@ -256,7 +259,8 @@ function renderHero(movie) {
 
 function renderMovieCards(movies) {
     if (movies.length <= 0 || movies.results.length <= 0) {
-        content.innerHTML = "<p class='fallback-message'>No movies found</p>";
+        content.innerHTML = "<p class='fallback-message'>No movies found</p>";  
+        pageSelector.style.display = 'none';
         return;
     }
 
