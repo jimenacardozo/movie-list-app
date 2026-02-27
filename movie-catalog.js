@@ -1,9 +1,12 @@
 import { fetchTrendingMovies } from "./movie-database-service.js";
 import { createMovieCard } from "./movie-card.js";
+import { fetchGenres } from "./movie-database-service.js";
+
+export let genres = {};
 
 let totalPages = 1;
 let currentPage = 1;
-let trendingMovies = [];
+let movies = [];
 let nextPage = Math.min(currentPage + 1, totalPages);
 const content = document.getElementById("content-grid");
 const nextPageButton = document.getElementById("next-page-button");
@@ -11,6 +14,15 @@ const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById("page-selector-previous-page");
 const pageSelectorNextPage = document.getElementById("page-selector-next-page");
 const pageSelector = document.getElementById("page-selector");
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    movies = await fetchTrendingMovies(currentPage);
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+    genres = await fetchGenres();
+});
 
 previousPageButton
     .addEventListener("click", () => {
@@ -27,16 +39,16 @@ nextPageButton.addEventListener("click", () => {
 
 export async function showMovieCatalog() {
     try {
-        trendingMovies = await fetchTrendingMovies(currentPage);
+        movies = await fetchTrendingMovies(currentPage);
 
         try {
-            totalPages = trendingMovies.total_pages;
+            totalPages = movies.total_pages;
         } catch (error) {
             console.error("Could not fetch total pages");
         }
 
         try {
-            currentPage = trendingMovies.page;
+            currentPage = movies.page;
             nextPage = currentPage + 1;
         } catch (error) {
             console.error("Could not fetch current page");
@@ -44,7 +56,7 @@ export async function showMovieCatalog() {
 
         setPageSelectorValues();
 
-        renderMovieCards(trendingMovies);
+        renderMovieCards(movies);
 
     } catch (error) {
         console.error("An error occurred:", error);
@@ -91,3 +103,4 @@ function renderMovieCards(movies) {
         content.appendChild(movieCard);
     });
 }
+

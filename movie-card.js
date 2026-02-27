@@ -1,10 +1,4 @@
-import { fetchGenres } from "./movie-database-service.js";
-
-let genres = {};
-
-document.addEventListener("DOMContentLoaded", async () => {
-    genres = await fetchGenres();
-});
+import { genres } from "./movie-catalog.js";
 
 export function createMovieCard(movie) {
 
