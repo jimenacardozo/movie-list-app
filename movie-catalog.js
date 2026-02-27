@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     movies = await fetchTrendingMovies(currentPage);
     genres = await fetchGenres();
     buildGenreSelector();
+    buildYearSelector();
 });
 
 previousPageButton
@@ -105,10 +106,28 @@ function renderMovieCards(movies) {
 }
 
 function buildGenreSelector() {
+    const genreOption = document.createElement('option');
+    genreOption.value = 'all';
+    genreOption.textContent = 'All Genres';
+    genreSelector.appendChild(genreOption);
     Object.entries(genres).forEach(([id, name]) => {
         const genreOption = document.createElement('option');
         genreOption.value = id;
         genreOption.textContent = name;
         genreSelector.appendChild(genreOption);
     });
+}
+
+function buildYearSelector() {
+    const yearOption = document.createElement('option');
+    yearOption.value = 'all';
+    yearOption.textContent = 'All Years';
+    yearSelector.appendChild(yearOption);
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 1900; year--) {
+        const yearOption = document.createElement('option');
+        yearOption.value = year;
+        yearOption.textContent = year;
+        yearSelector.appendChild(yearOption);
+    }
 }
