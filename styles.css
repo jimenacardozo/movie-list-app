@@ -19,6 +19,7 @@ footer {
 
 footer span {
     font-size: 0.8rem;
+    text-align: center;
 }
 
 .home {
@@ -188,9 +189,15 @@ footer span {
         text-align: left;
     }
 
-    .details {
+    .hero-movie-details {
         gap: 1.5rem;
         justify-content: flex-start;
+    }
+
+    footer {
+        display: flex;
+        flex-direction: row;
+        margin: 1rem;
     }
 }
 
