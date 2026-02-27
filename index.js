@@ -1,12 +1,12 @@
 import { CONFIG } from "./config.js";
 import { showHeroSection } from "./hero-section.js";
+import { createMovieCard } from "./movie-card.js";
 
 let totalPages = 1;
 let currentPage = 1;
 let trendingMovies = [];
 let nextPage = Math.min(currentPage + 1, totalPages);
 const content = document.getElementById("content-grid");
-let genres = {};
 const nextPageButton = document.getElementById("next-page-button");
 const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById("page-selector-previous-page");
@@ -14,7 +14,6 @@ const pageSelectorNextPage = document.getElementById("page-selector-next-page");
 const pageSelector = document.getElementById("page-selector");
 
 document.addEventListener("DOMContentLoaded", async () => {
-    await fetchGenres();
     await showHeroSection();
     await showTrendingMovies(currentPage);
 });
@@ -65,7 +64,7 @@ export async function fetchMovieVideos(movieDetails) {
     return response.json();
 }
 
-async function fetchGenres() {
+export async function fetchGenres() {
     try {
         const res = await fetch(
             "https://api.themoviedb.org/3/genre/movie/list",
@@ -84,9 +83,14 @@ async function fetchGenres() {
 
         const responseGenres = response.genres;
 
+        let genres = {};
+
         for (const genre of responseGenres) {
             genres[genre.id] = genre.name;
         }
+
+        return genres;
+
     } catch (error) {
         console.error("An error occurred:", error);
     }
@@ -176,48 +180,4 @@ function renderMovieCards(movies) {
 
         content.appendChild(movieCard);
     });
-}
-
-function createMovieCard(movie) {
-
-    const year = movie.release_date.split("-")[0];
-    const movieCard = document.createElement('div');
-    movieCard.classList.add('movie-card');
-
-    const movieImageContainer = document.createElement('div');
-    movieImageContainer.classList.add('movie-card-image-container');
-
-    const movieRatingTag = document.createElement('div');
-    movieRatingTag.classList.add('movie-rating-tag');
-    movieRatingTag.textContent = `★ ${movie.vote_average.toFixed(1)}`;
-
-    const movieImage = document.createElement('img');
-    movieImage.src = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
-
-    movieImageContainer.appendChild(movieRatingTag);
-    movieImageContainer.appendChild(movieImage);
-
-    movieCard.appendChild(movieImageContainer);
-
-    const movieTitle = document.createElement('h2');
-    movieTitle.textContent = movie.title;
-    movieCard.appendChild(movieTitle);
-
-    const releaseDate = document.createElement('span');
-    releaseDate.classList.add('movie-card-release-date');
-    releaseDate.textContent = year;
-    movieCard.appendChild(releaseDate);
-
-    const genreLabels = document.createElement('div');
-    genreLabels.classList.add('genre-labels');
-
-    movie.genre_ids.forEach((genreId) => {
-        const genreLabel = document.createElement('span');
-        genreLabel.classList.add('genre-label');
-        genreLabel.textContent = genres[genreId];
-        genreLabels.appendChild(genreLabel);
-    });
-
-    movieCard.appendChild(genreLabels);
-    return movieCard;
 }
