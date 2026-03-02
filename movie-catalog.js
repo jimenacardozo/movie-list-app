@@ -27,13 +27,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 previousPageButton
     .addEventListener("click", () => {
         if (currentPage > 1) {
-            showMovieCatalog(currentPage - 1);
+            currentPage = currentPage - 1;
+            showMovieCatalog();
         }
     });
 
 nextPageButton.addEventListener("click", () => {
     if (currentPage < totalPages) {
-        showMovieCatalog(currentPage + 1);
+        currentPage = currentPage + 1;
+        showMovieCatalog();
     }
 });
 
@@ -53,7 +55,6 @@ export async function showMovieCatalog() {
         } catch (error) {
             console.error("Could not fetch current page");
         }
-
         setPageSelectorValues();
 
         renderMovieCards(movies);
@@ -85,11 +86,11 @@ function setPageSelectorValues() {
     }
 
     pageSelectorPreviousPage.innerText = currentPage;
-
     pageSelectorNextPage.innerText = nextPage;
 }
 
 function renderMovieCards(movies) {
+    content.innerHTML = "";
     if (movies.length <= 0 || movies.results.length <= 0) {
         content.innerHTML = "<p class='fallback-message'>No movies found</p>";  
         pageSelector.style.display = 'none';
