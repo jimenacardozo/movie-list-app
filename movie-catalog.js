@@ -63,7 +63,7 @@ yearSelector.addEventListener("change", async () => {
 inputSearch.addEventListener("input", async () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
-        const movies = await fetchFilteredMoviesByWord();
+        const movies = await fetchFilteredMoviesByWord(inputSearch);
         if (!movies?.results) {
             await showMovieCatalog();
             return;

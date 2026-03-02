@@ -98,9 +98,8 @@ export async function fetchFilteredMovies(genreFilter, yearFilter) {
     return response;
 }
 
-export async function fetchFilteredMoviesByWord() {
-    const inputSearch = document.getElementById("search-movies");
-    const query = inputSearch.value.trim();
+export async function fetchFilteredMoviesByWord(word) {
+    const query = word.value.trim();
     if (query && query !== lastSearch) {
         lastSearch = query;
         try {
