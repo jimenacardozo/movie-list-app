@@ -6,7 +6,6 @@ export let genres = {};
 
 let totalPages = 1;
 let currentPage = 1;
-let movies = [];
 let nextPage = Math.min(currentPage + 1, totalPages);
 const content = document.getElementById("content-grid");
 const nextPageButton = document.getElementById("next-page-button");
@@ -16,33 +15,30 @@ const pageSelectorNextPage = document.getElementById("page-selector-next-page");
 const pageSelector = document.getElementById("page-selector");
 
 
-document.addEventListener("DOMContentLoaded", async () => {
-    movies = await fetchTrendingMovies(currentPage);
-});
 
 document.addEventListener("DOMContentLoaded", async () => {
     genres = await fetchGenres();
 });
 
 previousPageButton
-    .addEventListener("click", () => {
+    .addEventListener("click", async () => {
         if (currentPage > 1) {
             currentPage = currentPage - 1;
-            showMovieCatalog();
+            let movies = await fetchTrendingMovies(currentPage);
+            showMovieCatalog(movies);
         }
     });
 
-nextPageButton.addEventListener("click", () => {
+nextPageButton.addEventListener("click", async () => {
     if (currentPage < totalPages) {
         currentPage = currentPage + 1;
-        showMovieCatalog();
+        let movies = await fetchTrendingMovies(currentPage);
+        showMovieCatalog(movies);
     }
 });
 
-export async function showMovieCatalog() {
+export async function showMovieCatalog(movies) {
     try {
-        movies = await fetchTrendingMovies(currentPage);
-
         try {
             totalPages = movies.total_pages;
         } catch (error) {
