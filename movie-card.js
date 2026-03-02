@@ -1,6 +1,4 @@
-import { genres } from "./movie-catalog.js";
-
-export function createMovieCard(movie) {
+export function createMovieCard(movie, genres) {
 
     const year = movie.release_date.split("-")[0];
     const movieCard = document.createElement('div');

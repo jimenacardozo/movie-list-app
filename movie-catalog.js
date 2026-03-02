@@ -2,7 +2,7 @@ import { fetchTrendingMovies } from "./movie-database-service.js";
 import { createMovieCard } from "./movie-card.js";
 import { fetchGenres } from "./movie-database-service.js";
 
-export let genres = {};
+let genres = {};
 
 let totalPages = 1;
 let currentPage = 1;
@@ -95,7 +95,7 @@ function renderMovieCards(movies) {
 
     movies.results.forEach((movie) => {
 
-        const movieCard = createMovieCard(movie);
+        const movieCard = createMovieCard(movie, genres);
 
         content.appendChild(movieCard);
     });
