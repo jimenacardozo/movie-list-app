@@ -29,7 +29,7 @@ export async function getHeroContent() {
             rating: movieDetails.vote_average.toFixed(1),
             releaseYear: movieDetails.release_date.slice(0, 4),
             duration: `${Math.floor(movieDetails.runtime / 60)}h ${movieDetails.runtime % 60}m`,
-            genres: movieDetails.genres.map(g => `<span class="genre">${g.name}</span>`).join(' '),
+            genres: movieDetails.genres,
             trailerURL: trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null
         };
     } catch (error) {
@@ -89,10 +89,14 @@ function renderHero(movie) {
     heroMovieDetails.appendChild(duration);
 
     const genresDiv = document.createElement('div');
-    genresDiv.classList.add('genres');
-    genresDiv.innerHTML = movie.genres;
+    movie.genres.forEach(g => {
+                        const span = document.createElement('span');
+                        span.classList.add('genre');
+                        span.textContent = g.name;
+                        genresDiv.appendChild(span);
+                    });
     heroMovieDetails.appendChild(genresDiv);
-
+    
     const description = document.createElement('p');
     description.classList.add('hero-description');
     description.textContent = movie.overview;
