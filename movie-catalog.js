@@ -50,6 +50,20 @@ genreSelector.addEventListener("change", async () => {
     renderMovieCards(movies);
 });
 
+yearSelector.addEventListener("change", async () => {
+    const selectedYear = yearSelector.value;
+    yearFilter = selectedYear;
+    await filterMovies();
+    renderMovieCards(movies);
+}); 
+
+yearSelector.addEventListener("change", async () => {
+    const selectedYear = yearSelector.value;
+    yearFilter = selectedYear;
+    await filterMovies();
+    renderMovieCards(movies);
+}); 
+
 export async function showMovieCatalog(movies) {
     try {
         try {
