@@ -12,7 +12,12 @@ export function createMovieCard(movie, genres) {
     movieRatingTag.textContent = `★ ${movie.vote_average.toFixed(1)}`;
 
     const movieImage = document.createElement('img');
-    movieImage.src = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+    if (!movie.poster_path || movie.poster_path === null) {
+        movieImage.src = "img/fallbackPoster.png";
+    }
+    else {
+        movieImage.src = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+    }
 
     movieImageContainer.appendChild(movieRatingTag);
     movieImageContainer.appendChild(movieImage);
