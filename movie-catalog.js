@@ -2,6 +2,7 @@ import { fetchTrendingMovies } from "./movie-database-service.js";
 import { createMovieCard } from "./movie-card.js";
 import { fetchGenres } from "./movie-database-service.js";
 import { fetchFilteredMovies } from "./movie-database-service.js";
+import { fetchFilteredMoviesByWord } from "./movie-database-service.js";
 
 let genres = {};
 
@@ -20,6 +21,8 @@ const genreSelector = document.getElementById("select-genre");
 const yearSelector = document.getElementById("select-year");
 let genreFilter = "all";
 let yearFilter = "all";
+const inputSearch = document.getElementById("search-movies");
+let timeoutId = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     genres = await fetchGenres();
@@ -57,12 +60,17 @@ yearSelector.addEventListener("change", async () => {
     renderMovieCards(movies);
 }); 
 
-yearSelector.addEventListener("change", async () => {
-    const selectedYear = yearSelector.value;
-    yearFilter = selectedYear;
-    await filterMovies();
-    renderMovieCards(movies);
-}); 
+inputSearch.addEventListener("input", async () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(async () => {
+        const movies = await fetchFilteredMoviesByWord();
+        if (!movies?.results) {
+            await showMovieCatalog();
+            return;
+        }
+        renderMovieCards(movies);
+    }, 500);
+});
 
 export async function showMovieCatalog(movies) {
     try {
