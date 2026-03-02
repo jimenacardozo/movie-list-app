@@ -1,10 +1,10 @@
-import { fetchDailyTrendingMovies, fetchMovieDetails, fetchMovieVideos } from "./movie-database-service.js";
+import { fetchTrendingMovies, fetchMovieDetails, fetchMovieVideos } from "./movie-database-service.js";
 
 const heroSection = document.getElementById('hero');
 
-export async function showHeroSection() {
+export async function showHeroSection(dayTrendingMovies) {
     try {
-        const movieData = await getHeroContent();
+        const movieData = await buildHeroContent(dayTrendingMovies);
         renderHero(movieData);
     } catch (error) {
         console.error('An error occurred while showing the hero section:', error);
@@ -14,9 +14,8 @@ export async function showHeroSection() {
     }
 }
 
-export async function getHeroContent() {
+export async function buildHeroContent(dayTrendingMovies) {
     try {
-        const dayTrendingMovies = await fetchDailyTrendingMovies();
         const heroMovie = dayTrendingMovies.results[0];
         const movieDetails = await fetchMovieDetails(heroMovie);
         const videoData = await fetchMovieVideos(movieDetails);
