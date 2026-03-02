@@ -1,8 +1,12 @@
 import { CONFIG } from "./config.js";
 
 export async function fetchTrendingMovies(page) {
+    let pageQuery = "";
+    if (page) {
+        pageQuery = `?page=${page}`;
+    }
     const res = await fetch(
-        `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
+        `https://api.themoviedb.org/3/trending/movie/day${pageQuery}`,
         {
             method: "GET",
             headers: {
@@ -25,18 +29,6 @@ export async function fetchMovieDetails(heroMovie) {
             'accept': 'application/json'
         }
     });
-    return response.json();
-}
-
-export async function fetchDailyTrendingMovies() {
-    let response = await fetch('https://api.themoviedb.org/3/trending/movie/day', {
-        method: 'GET',
-        headers: {
-            'accept': 'application/json',
-            'Authorization': `Bearer ${CONFIG.API_KEY}`,
-        }
-    });
-    if (!response.ok) throw new Error('Error fetching movies');
     return response.json();
 }
 
