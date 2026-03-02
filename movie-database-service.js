@@ -1,5 +1,7 @@
 import { CONFIG } from "./config.js";
 
+let lastSearch = "";
+
 export async function fetchTrendingMovies(page) {
     let pageQuery = "";
     if (page) {
@@ -94,4 +96,26 @@ export async function fetchFilteredMovies(genreFilter, yearFilter) {
 
     let response = await res.json();
     return response;
+}
+
+export async function fetchFilteredMoviesByWord() {
+    const inputSearch = document.getElementById("search-movies");
+    const query = inputSearch.value.trim();
+    if (query && query !== lastSearch) {
+        lastSearch = query;
+        try {
+            const res = await fetch(`https://api.themoviedb.org/3/search/movie?query=${query}`, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization': `Bearer ${CONFIG.API_KEY}`,
+                }
+            });
+            const movies = await res.json();
+            return movies;
+        } catch (error) {
+            console.error("Could not fetch movies by word:", error);
+            return [];
+        }
+    }
 }
