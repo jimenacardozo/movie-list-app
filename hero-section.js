@@ -1,4 +1,4 @@
-import { fetchTrendingMovies, fetchMovieDetails, fetchMovieVideos } from "./movie-database-service.js";
+import { fetchMovieDetails, fetchMovieVideos } from "./movie-database-service.js";
 
 const heroSection = document.getElementById('hero');
 
