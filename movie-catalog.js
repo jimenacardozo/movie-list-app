@@ -162,11 +162,17 @@ function buildYearSelector() {
 
 async function updateMovies() {
     setUrl();
+    try{
+        const res = await fetchMovies();
+        totalPages = res.total_pages;
 
-    const res = await fetchMovies();
-    totalPages = res.total_pages;
-
-    return res;
+        return res;
+    } catch (error) {
+        console.error("An error occurred while fetching movies:", error);
+        content.innerHTML =
+            "<p class='fallback-message'>An error occurred. Try again later.</p>";
+        pageSelector.style.display = "none";
+    }
 }
 
 function setUrl() {
