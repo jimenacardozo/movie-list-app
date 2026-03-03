@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 previousPageButton.addEventListener("click", async () => {
         if (currentPage > 1) {
             currentPage = currentPage - 1;
-            let movies = await fetchTrendingMovies(currentPage);
+            const movies = await fetchTrendingMovies(currentPage);
             showMovieCatalog(movies);
         }
     });
@@ -41,7 +41,7 @@ previousPageButton.addEventListener("click", async () => {
 nextPageButton.addEventListener("click", async () => {
     if (currentPage < totalPages) {
         currentPage = currentPage + 1;
-        let movies = await fetchTrendingMovies(currentPage);
+        const movies = await fetchTrendingMovies(currentPage);
         showMovieCatalog(movies);
     }
 });
@@ -49,14 +49,14 @@ nextPageButton.addEventListener("click", async () => {
 genreSelector.addEventListener("change", async () => {
     const selectedGenreId = genreSelector.value;
     genreFilter = selectedGenreId;
-    await filterMovies();
+    const movies = await filterMovies();
     renderMovieCards(movies);
 });
 
 yearSelector.addEventListener("change", async () => {
     const selectedYear = yearSelector.value;
     yearFilter = selectedYear;
-    await filterMovies();
+    const movies = await filterMovies();
     renderMovieCards(movies);
 }); 
 
@@ -165,5 +165,5 @@ function buildYearSelector() {
 }
 
 async function filterMovies() {
-    movies = await fetchFilteredMovies(genreFilter, yearFilter);
+    return await fetchFilteredMovies(genreFilter, yearFilter);
 }
