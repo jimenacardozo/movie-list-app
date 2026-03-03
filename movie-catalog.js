@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 previousPageButton.addEventListener("click", async () => {
         if (currentPage > 1) {
             currentPage = currentPage - 1;
+            updateFilters();
             const movies = await fetchTrendingMovies(currentPage);
             showMovieCatalog(movies);
         }
@@ -41,6 +42,7 @@ previousPageButton.addEventListener("click", async () => {
 nextPageButton.addEventListener("click", async () => {
     if (currentPage < totalPages) {
         currentPage = currentPage + 1;
+        updateFilters();
         const movies = await fetchTrendingMovies(currentPage);
         showMovieCatalog(movies);
     }
@@ -49,6 +51,7 @@ nextPageButton.addEventListener("click", async () => {
 genreSelector.addEventListener("change", async () => {
     const selectedGenreId = genreSelector.value;
     genreFilter = selectedGenreId;
+    updateFilters();
     const movies = await filterMovies();
     renderMovieCards(movies);
 });
@@ -56,6 +59,7 @@ genreSelector.addEventListener("change", async () => {
 yearSelector.addEventListener("change", async () => {
     const selectedYear = yearSelector.value;
     yearFilter = selectedYear;
+    updateFilters();
     const movies = await filterMovies();
     renderMovieCards(movies);
 }); 
@@ -68,6 +72,7 @@ inputSearch.addEventListener("input", async () => {
             await showMovieCatalog();
             return;
         }
+        updateFilters();
         renderMovieCards(movies);
     }, 500);
 });
@@ -166,4 +171,19 @@ function buildYearSelector() {
 
 async function filterMovies() {
     return await fetchFilteredMovies(genreFilter, yearFilter);
+}
+
+function updateFilters() {
+    const params = new URLSearchParams();
+    let search = inputSearch.value;
+
+    if (search) params.set('q', search);
+    if (yearFilter !== "all") params.set('year', yearFilter);
+    if (genreFilter !== "all") params.set('genre', genreFilter);
+    if (currentPage !== 1) params.set ('page', currentPage);
+
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+
+    fetchMovies();
 }
