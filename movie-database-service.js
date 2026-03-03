@@ -1,6 +1,7 @@
 import { CONFIG } from "./config.js";
 
 let lastSearch = "";
+const apiBaseUrl = "https://api.themoviedb.org/3";
 
 export async function fetchTrendingMovies(page) {
     let pageQuery = "";
@@ -8,7 +9,7 @@ export async function fetchTrendingMovies(page) {
         pageQuery = `?page=${page}`;
     }
     const res = await fetch(
-        `https://api.themoviedb.org/3/trending/movie/day${pageQuery}`,
+        `${apiBaseUrl}/trending/movie/day${pageQuery}`,
         {
             method: "GET",
             headers: {
@@ -25,7 +26,7 @@ export async function fetchTrendingMovies(page) {
 }
 
 export async function fetchMovieDetails(heroMovie) {
-    let response = await fetch(`https://api.themoviedb.org/3/movie/${heroMovie.id}`, {
+    let response = await fetch(`${apiBaseUrl}/movie/${heroMovie.id}`, {
         headers: {
             'Authorization': `Bearer ${CONFIG.API_KEY}`,
             'accept': 'application/json'
@@ -35,7 +36,7 @@ export async function fetchMovieDetails(heroMovie) {
 }
 
 export async function fetchMovieVideos(movieDetails) {
-    let response = await fetch(`https://api.themoviedb.org/3/movie/${movieDetails.id}/videos`, {
+    let response = await fetch(`${apiBaseUrl}/movie/${movieDetails.id}/videos`, {
         headers: {
             'Authorization': `Bearer ${CONFIG.API_KEY}`,
             'accept': 'application/json'
@@ -47,7 +48,7 @@ export async function fetchMovieVideos(movieDetails) {
 export async function fetchGenres() {
     try {
         const res = await fetch(
-            "https://api.themoviedb.org/3/genre/movie/list",
+            "${apiBaseUrl}/genre/movie/list",
             {
                 method: "GET",
                 headers: {
@@ -85,7 +86,7 @@ export async function fetchFilteredMovies(genreFilter, yearFilter) {
         query += `primary_release_year=${yearFilter}`;
     }
 
-    const res = await fetch (`https://api.themoviedb.org/3/discover/movie?${query}`,{
+    const res = await fetch (`${apiBaseUrl}/discover/movie?${query}`,{
             method: 'GET',
             headers: {
                 'accept': 'application/json',
@@ -103,7 +104,7 @@ export async function fetchFilteredMoviesByWord(word) {
     if (query && query !== lastSearch) {
         lastSearch = query;
         try {
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?query=${query}`, {
+            const res = await fetch(`${apiBaseUrl}/search/movie?query=${query}`, {
                 method: 'GET',
                 headers: {
                     'accept': 'application/json',
@@ -116,5 +117,30 @@ export async function fetchFilteredMoviesByWord(word) {
             console.error("Could not fetch movies by word:", error);
             return [];
         }
+    }
+}
+
+function determineEndpoint(params) {
+    if (params.has('q') && params.get('q').trim() !== "") {
+        return `${CONFIG.apiBaseUrl}/movies/search`;
+    }
+    if (params.has('year') || params.has('genre')) {
+        return `${CONFIG.apiBaseUrl}/movies/filter`;
+    }
+    return `${CONFIG.apiBaseUrl}/trendingMovies`;
+}
+
+async function fetchMovies(params) {
+    const endpoint = determineEndpoint(params);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+    const finalUrl = `${endpoint}${queryString}`;
+
+    try {
+        const response = await fetch(finalUrl);
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to fetch movies:", error);
+        return null; 
     }
 }
