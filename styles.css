@@ -175,7 +175,17 @@ footer span {
 }
 
 .filter-select option:hover {
-    background-color: #232426;
+    background-color: #212122;
+}
+
+
+.filter-select:disabled{
+    border: 1px solid #232426;
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color:#545353;
+    color: rgb(216, 215, 215);
 }
 
 @media screen and (min-width: 1024px) {

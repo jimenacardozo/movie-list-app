@@ -8,16 +8,13 @@ export async function fetchTrendingMovies(page) {
     if (page) {
         pageQuery = `?page=${page}`;
     }
-    const res = await fetch(
-        `${apiBaseUrl}/trending/movie/day${pageQuery}`,
-        {
-            method: "GET",
-            headers: {
-                accept: "application/json",
-                Authorization: `Bearer ${CONFIG.API_KEY}`,
-            },
-        }
-    );
+    const res = await fetch(`${apiBaseUrl}/trending/movie/day${pageQuery}`, {
+        method: "GET",
+        headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${CONFIG.API_KEY}`,
+        },
+    });
 
     if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
 
@@ -28,35 +25,35 @@ export async function fetchTrendingMovies(page) {
 export async function fetchMovieDetails(heroMovie) {
     let response = await fetch(`${apiBaseUrl}/movie/${heroMovie.id}`, {
         headers: {
-            'Authorization': `Bearer ${CONFIG.API_KEY}`,
-            'accept': 'application/json'
-        }
+            Authorization: `Bearer ${CONFIG.API_KEY}`,
+            accept: "application/json",
+        },
     });
     return response.json();
 }
 
 export async function fetchMovieVideos(movieDetails) {
-    let response = await fetch(`${apiBaseUrl}/movie/${movieDetails.id}/videos`, {
-        headers: {
-            'Authorization': `Bearer ${CONFIG.API_KEY}`,
-            'accept': 'application/json'
-        }
-    });
+    let response = await fetch(
+        `${apiBaseUrl}/movie/${movieDetails.id}/videos`,
+        {
+            headers: {
+                Authorization: `Bearer ${CONFIG.API_KEY}`,
+                accept: "application/json",
+            },
+        },
+    );
     return response.json();
 }
 
 export async function fetchGenres() {
     try {
-        const res = await fetch(
-            "${apiBaseUrl}/genre/movie/list",
-            {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${CONFIG.API_KEY}`,
-                },
+        const res = await fetch(`${apiBaseUrl}/genre/movie/list`, {
+            method: "GET",
+            headers: {
+                accept: "application/json",
+                Authorization: `Bearer ${CONFIG.API_KEY}`,
             },
-        );
+        });
 
         if (!res.ok) throw new Error("Error fetching genres");
 
@@ -71,7 +68,6 @@ export async function fetchGenres() {
         }
 
         return genres;
-
     } catch (error) {
         console.error("An error occurred:", error);
     }
@@ -86,14 +82,13 @@ export async function fetchFilteredMovies(genreFilter, yearFilter) {
         query += `primary_release_year=${yearFilter}`;
     }
 
-    const res = await fetch (`${apiBaseUrl}/discover/movie?${query}`,{
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Authorization': `Bearer ${CONFIG.API_KEY}`,
-            }
-        }
-    );
+    const res = await fetch(`${apiBaseUrl}/discover/movie?${query}`, {
+        method: "GET",
+        headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${CONFIG.API_KEY}`,
+        },
+    });
 
     let response = await res.json();
     return response;
@@ -104,13 +99,16 @@ export async function fetchFilteredMoviesByWord(word) {
     if (query && query !== lastSearch) {
         lastSearch = query;
         try {
-            const res = await fetch(`${apiBaseUrl}/search/movie?query=${query}`, {
-                method: 'GET',
-                headers: {
-                    'accept': 'application/json',
-                    'Authorization': `Bearer ${CONFIG.API_KEY}`,
-                }
-            });
+            const res = await fetch(
+                `${apiBaseUrl}/search/movie?query=${query}`,
+                {
+                    method: "GET",
+                    headers: {
+                        accept: "application/json",
+                        Authorization: `Bearer ${CONFIG.API_KEY}`,
+                    },
+                },
+            );
             const movies = await res.json();
             return movies;
         } catch (error) {
@@ -121,26 +119,31 @@ export async function fetchFilteredMoviesByWord(word) {
 }
 
 function determineEndpoint(params) {
-    if (params.has('q') && params.get('q').trim() !== "") {
-        return `${CONFIG.apiBaseUrl}/movies/search`;
+    if (params.has("query") && params.get("query").trim() !== "") {
+        return `${apiBaseUrl}/search/movie`;
     }
-    if (params.has('year') || params.has('genre')) {
-        return `${CONFIG.apiBaseUrl}/movies/filter`;
+    if (params.has("primary_release_year") || params.has("with_genres")) {
+        return `${apiBaseUrl}/discover/movie`;
     }
-    return `${CONFIG.apiBaseUrl}/trendingMovies`;
+    return `${apiBaseUrl}/trending/movie/day`;
 }
 
-async function fetchMovies(params) {
-    const endpoint = determineEndpoint(params);
-    const queryString = params.toString() ? `?${params.toString()}` : '';
-    const finalUrl = `${endpoint}${queryString}`;
+function getParamsFromUrl() {
+    return new URLSearchParams(window.location.search);
+}
 
-    try {
-        const response = await fetch(finalUrl);
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-        return await response.json();
-    } catch (error) {
-        console.error("Failed to fetch movies:", error);
-        return null; 
-    }
+export async function fetchMovies() {
+    const params = getParamsFromUrl();
+    const endpoint = determineEndpoint(params);
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    const finalUrl = `${endpoint}${queryString}`;
+    const response = await fetch(finalUrl, {
+        method: "GET",
+        headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${CONFIG.API_KEY}`,
+        },
+    });
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    return await response.json();
 }

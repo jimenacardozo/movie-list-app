@@ -1,8 +1,6 @@
-import { fetchTrendingMovies } from "./movie-database-service.js";
 import { createMovieCard } from "./movie-card.js";
 import { fetchGenres } from "./movie-database-service.js";
-import { fetchFilteredMovies } from "./movie-database-service.js";
-import { fetchFilteredMoviesByWord } from "./movie-database-service.js";
+import { fetchMovies } from "./movie-database-service.js";
 
 let genres = {};
 
@@ -31,19 +29,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 previousPageButton.addEventListener("click", async () => {
-        if (currentPage > 1) {
-            currentPage = currentPage - 1;
-            updateFilters();
-            const movies = await fetchTrendingMovies(currentPage);
-            showMovieCatalog(movies);
-        }
-    });
+    if (currentPage > 1) {
+        currentPage = currentPage - 1;
+        const movies = await updateFilters();
+        showMovieCatalog(movies);
+    }
+});
 
 nextPageButton.addEventListener("click", async () => {
     if (currentPage < totalPages) {
         currentPage = currentPage + 1;
-        updateFilters();
-        const movies = await fetchTrendingMovies(currentPage);
+        const movies = await updateFilters();
         showMovieCatalog(movies);
     }
 });
@@ -51,28 +47,21 @@ nextPageButton.addEventListener("click", async () => {
 genreSelector.addEventListener("change", async () => {
     const selectedGenreId = genreSelector.value;
     genreFilter = selectedGenreId;
-    updateFilters();
-    const movies = await filterMovies();
+    const movies = await updateFilters();
     renderMovieCards(movies);
 });
 
 yearSelector.addEventListener("change", async () => {
     const selectedYear = yearSelector.value;
     yearFilter = selectedYear;
-    updateFilters();
-    const movies = await filterMovies();
+    const movies = await updateFilters();
     renderMovieCards(movies);
-}); 
+});
 
 inputSearch.addEventListener("input", async () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
-        const movies = await fetchFilteredMoviesByWord(inputSearch);
-        if (!movies?.results) {
-            await showMovieCatalog();
-            return;
-        }
-        updateFilters();
+        const movies = await updateFilters();
         renderMovieCards(movies);
     }, 500);
 });
@@ -135,7 +124,6 @@ function renderMovieCards(movies) {
     }
 
     movies.results.forEach((movie) => {
-
         const movieCard = createMovieCard(movie, genres);
 
         content.appendChild(movieCard);
@@ -169,21 +157,25 @@ function buildYearSelector() {
     }
 }
 
-async function filterMovies() {
-    return await fetchFilteredMovies(genreFilter, yearFilter);
-}
-
-function updateFilters() {
+async function updateFilters() {
     const params = new URLSearchParams();
     let search = inputSearch.value;
 
-    if (search) params.set('q', search);
-    if (yearFilter !== "all") params.set('year', yearFilter);
-    if (genreFilter !== "all") params.set('genre', genreFilter);
-    if (currentPage !== 1) params.set ('page', currentPage);
+    if (search) {
+        genreFilter = "all";
+        genreSelector.innerHTML = "";
+        buildGenreSelector();
+        genreSelector.disabled = true;
+        params.set("query", search);
+    } else {
+        genreSelector.disabled = false;
+        if (genreFilter !== "all") params.set("with_genres", genreFilter);
+    }
+    if (yearFilter !== "all") params.set("primary_release_year", yearFilter);
+    if (currentPage !== 1) params.set("page", currentPage);
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.pushState({}, '', newUrl);
+    window.history.pushState({}, "", newUrl);
 
-    fetchMovies();
+    return await fetchMovies();
 }
