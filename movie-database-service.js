@@ -2,6 +2,20 @@ import { CONFIG } from "./config.js";
 
 const apiBaseUrl = "https://api.themoviedb.org/3";
 
+export async function fetchTrendingMovies() {
+    const res = await fetch(`${apiBaseUrl}/trending/movie/day`, {
+        method: "GET",
+        headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${CONFIG.API_KEY}`,
+        },
+    });
+
+    if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
+
+    return await res.json();
+}
+
 export async function fetchMovieDetails(heroMovie) {
     let response = await fetch(`${apiBaseUrl}/movie/${heroMovie.id}`, {
         headers: {
@@ -13,7 +27,7 @@ export async function fetchMovieDetails(heroMovie) {
 }
 
 export async function fetchMovieVideos(movieDetails) {
-    let response = await fetch(
+    const response = await fetch(
         `${apiBaseUrl}/movie/${movieDetails.id}/videos`,
         {
             headers: {
@@ -53,20 +67,6 @@ export async function fetchGenres() {
     }
 }
 
-function determineEndpoint(params) {
-    if (params.has("query") && params.get("query").trim() !== "") {
-        return `${apiBaseUrl}/search/movie`;
-    }
-    if (params.has("primary_release_year") || params.has("with_genres")) {
-        return `${apiBaseUrl}/discover/movie`;
-    }
-    return `${apiBaseUrl}/trending/movie/day`;
-}
-
-function getParamsFromUrl() {
-    return new URLSearchParams(window.location.search);
-}
-
 export async function fetchMovies() {
     const params = getParamsFromUrl();
     const endpoint = determineEndpoint(params);
@@ -80,5 +80,20 @@ export async function fetchMovies() {
         },
     });
     if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
     return await response.json();
+}
+
+function determineEndpoint(params) {
+    if (params.has("query") && params.get("query").trim() !== "") {
+        return `${apiBaseUrl}/search/movie`;
+    }
+    if (params.has("primary_release_year") || params.has("with_genres")) {
+        return `${apiBaseUrl}/discover/movie`;
+    }
+    return `${apiBaseUrl}/trending/movie/day`;
+}
+
+function getParamsFromUrl() {
+    return new URLSearchParams(window.location.search);
 }
