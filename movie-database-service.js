@@ -1,26 +1,6 @@
 import { CONFIG } from "./config.js";
 
-let lastSearch = "";
 const apiBaseUrl = "https://api.themoviedb.org/3";
-
-export async function fetchTrendingMovies(page) {
-    let pageQuery = "";
-    if (page) {
-        pageQuery = `?page=${page}`;
-    }
-    const res = await fetch(`${apiBaseUrl}/trending/movie/day${pageQuery}`, {
-        method: "GET",
-        headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${CONFIG.API_KEY}`,
-        },
-    });
-
-    if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
-
-    let trendingMovies = await res.json();
-    return trendingMovies;
-}
 
 export async function fetchMovieDetails(heroMovie) {
     let response = await fetch(`${apiBaseUrl}/movie/${heroMovie.id}`, {
@@ -70,51 +50,6 @@ export async function fetchGenres() {
         return genres;
     } catch (error) {
         console.error("An error occurred:", error);
-    }
-}
-
-export async function fetchFilteredMovies(genreFilter, yearFilter) {
-    let query = "";
-    if (genreFilter !== "all") {
-        query += `with_genres=${genreFilter}&`;
-    }
-    if (yearFilter !== "all") {
-        query += `primary_release_year=${yearFilter}`;
-    }
-
-    const res = await fetch(`${apiBaseUrl}/discover/movie?${query}`, {
-        method: "GET",
-        headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${CONFIG.API_KEY}`,
-        },
-    });
-
-    let response = await res.json();
-    return response;
-}
-
-export async function fetchFilteredMoviesByWord(word) {
-    const query = word.value.trim();
-    if (query && query !== lastSearch) {
-        lastSearch = query;
-        try {
-            const res = await fetch(
-                `${apiBaseUrl}/search/movie?query=${query}`,
-                {
-                    method: "GET",
-                    headers: {
-                        accept: "application/json",
-                        Authorization: `Bearer ${CONFIG.API_KEY}`,
-                    },
-                },
-            );
-            const movies = await res.json();
-            return movies;
-        } catch (error) {
-            console.error("Could not fetch movies by word:", error);
-            return [];
-        }
     }
 }
 
