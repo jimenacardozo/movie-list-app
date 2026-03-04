@@ -71,7 +71,7 @@ export async function fetchMovies() {
     const params = getParamsFromUrl();
     const endpoint = determineEndpoint(params);
     const queryString = params.toString() ? `?${params.toString()}` : "";
-    const finalUrl = `${endpoint}${queryString}`;
+    let finalUrl = `${endpoint}${queryString}`;
     const response = await fetch(finalUrl, {
         method: "GET",
         headers: {

@@ -120,7 +120,7 @@ function setPageSelectorValues() {
 function renderMovieCards(movies) {
     content.innerHTML = "";
 
-    if (movies.length <= 0 || movies.results.length <= 0) {
+    if (movies.results.length <= 0) {
         content.innerHTML = "<p class='fallback-message'>No movies found</p>";
         pageSelector.style.display = "none";
         return;
