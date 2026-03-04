@@ -68,10 +68,10 @@ export async function fetchGenres() {
 }
 
 export async function fetchMovies() {
-    const params = getParamsFromUrl();
+    const params = new URLSearchParams(window.location.search);
     const endpoint = determineEndpoint(params);
     const queryString = params.toString() ? `?${params.toString()}` : "";
-    let finalUrl = `${endpoint}${queryString}`;
+    const finalUrl = `${endpoint}${queryString}`;
     const response = await fetch(finalUrl, {
         method: "GET",
         headers: {
@@ -92,8 +92,4 @@ function determineEndpoint(params) {
         return `${apiBaseUrl}/discover/movie`;
     }
     return `${apiBaseUrl}/trending/movie/day`;
-}
-
-function getParamsFromUrl() {
-    return new URLSearchParams(window.location.search);
 }
