@@ -31,7 +31,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 previousPageButton.addEventListener("click", async () => {
     if (currentPage > 1) {
         currentPage = currentPage - 1;
+        setUrl();
         const movies = await updateMovies();
+        if (!movies) return;
         showMovieCatalog(movies);
     }
 });
@@ -39,7 +41,9 @@ previousPageButton.addEventListener("click", async () => {
 nextPageButton.addEventListener("click", async () => {
     if (currentPage < totalPages) {
         currentPage = currentPage + 1;
+        setUrl();
         const movies = await updateMovies();
+        if (!movies) return;
         showMovieCatalog(movies);
     }
 });
@@ -48,7 +52,9 @@ genreSelector.addEventListener("change", async () => {
     const selectedGenreId = genreSelector.value;
     genreFilter = selectedGenreId;
     currentPage = 1;
+    setUrl();
     const movies = await updateMovies();
+    if (!movies) return;
     showMovieCatalog(movies);
 });
 
@@ -56,7 +62,9 @@ yearSelector.addEventListener("change", async () => {
     const selectedYear = yearSelector.value;
     yearFilter = selectedYear;
     currentPage = 1;
+    setUrl();
     const movies = await updateMovies();
+    if (!movies) return;
     showMovieCatalog(movies);
 });
 
@@ -64,26 +72,24 @@ inputSearch.addEventListener("input", async () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
         currentPage = 1;
+        setUrl();
         const movies = await updateMovies();
+        if (!movies) return;
         showMovieCatalog(movies);
     }, 500);
 });
 
+window.addEventListener("popstate", async () => {
+    const movies = await updateMovies();
+    if (!movies) return;
+    showMovieCatalog(movies);
+})
+
 export async function showMovieCatalog(movies) {
     try {
-        try {
-            totalPages = movies.total_pages;
-        } catch (error) {
-            console.error("Could not fetch total pages");
-        }
-
-        try {
-            currentPage = movies.page;
-        } catch (error) {
-            console.error("Could not fetch current page");
-        }
+        totalPages = movies.total_pages;
+        currentPage = movies.page;
         setPageSelectorValues();
-
         renderMovieCards(movies);
     } catch (error) {
         console.error("An error occurred:", error);
@@ -161,7 +167,6 @@ function buildYearSelector() {
 }
 
 async function updateMovies() {
-    setUrl();
     try{
         const res = await fetchMovies();
         totalPages = res.total_pages;
