@@ -12,7 +12,9 @@ export function createMovieCard(movie, genres) {
     movieRatingTag.textContent = `★ ${movie.vote_average.toFixed(1)}`;
 
     const movieImage = document.createElement('img');
-    if (!movie.poster_path || movie.poster_path === null) {
+    if (!movie.poster_path) {
+        movieImage.src = "img/fallbackPoster.png";
+    } else {
         movieImage.src = "img/fallbackPoster.png";
     }
     else {
