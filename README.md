@@ -14,7 +14,7 @@ This project uses the [TMDB API](https://developer.themoviedb.org/docs/getting-s
 * **Images:** `https://image.tmdb.org/t/p/` Used to display posters.
 * `GET /movie/{id}`: To get detailed information (runtime, genres, etc.) about a specific movie.
 * `GET /movie/{id}/videos`: To get trailers and clips related to the movie.
-* `GET /discover/movie`: To find movies by specific filters.
+* `GET /search/movie`: To get movies by keywords in the movie title.
 * `GET /search/movie/keyword`: To get movies by keywords in the movie title.
 
 ### Setup for usage:
