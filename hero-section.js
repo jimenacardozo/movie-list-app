@@ -61,7 +61,6 @@ function renderHero(movie) {
 
     const heroImage = document.createElement("img");
     heroImage.classList.add("hero-image");
-    console.log(`Hero image URL: ${movie.imgUrl}`);
     if (movie.imgUrl === "https://image.tmdb.org/t/p/w500" || movie.imgUrl === "https://image.tmdb.org/t/p/w500null") {
         heroImage.src = "img/fallbackPoster.png";
     } else {
