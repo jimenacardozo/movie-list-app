@@ -14,10 +14,7 @@ export function createMovieCard(movie, genres) {
     const movieImage = document.createElement('img');
     if (!movie.poster_path) {
         movieImage.src = "img/fallbackPoster.png";
-    } else {
-        movieImage.src = "img/fallbackPoster.png";
-    }
-    else {
+    }  else {
         movieImage.src = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
     }
 
