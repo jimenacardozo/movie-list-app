@@ -183,8 +183,7 @@ function setUrl() {
     if (currentPage !== 1) params.set("page", currentPage);
     if (search) {
         genreFilter = "all";
-        genreSelector.innerHTML = "";
-        buildGenreSelector();
+        genreSelector.value = "all";
         genreSelector.disabled = true;
         params.set("query", search);
     } else {
