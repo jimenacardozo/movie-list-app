@@ -80,6 +80,8 @@ inputSearch.addEventListener("input", async () => {
 });
 
 window.addEventListener("popstate", async () => {
+    buildGenreSelector();
+    buildYearSelector();
     const movies = await updateMovies();
     if (!movies) return;
     showMovieCatalog(movies);
@@ -140,30 +142,72 @@ function renderMovieCards(movies) {
 }
 
 function buildGenreSelector() {
-    const genreOption = document.createElement("option");
-    genreOption.value = "all";
-    genreOption.textContent = "All Genres";
-    genreSelector.appendChild(genreOption);
+    const genreFilterValue = new URLSearchParams(window.location.search).get("with_genres");
+    const hasValidGenreInUrl = genreFilterValue && genres[genreFilterValue];
+
+    if (hasValidGenreInUrl) {
+        genreFilter = genreFilterValue;
+    } else {
+        genreFilter = "all";
+    }
+
+    genreSelector.innerHTML = "";
+
+    const firstOption = document.createElement("option");
+    firstOption.value = genreFilter;
+    firstOption.textContent = genreFilter === "all" ? "All Genres" : genres[genreFilter];
+    genreSelector.appendChild(firstOption);
+
+    if (genreFilter !== "all") {
+        const allOption = document.createElement("option");
+        allOption.value = "all";
+        allOption.textContent = "All Genres";
+        genreSelector.appendChild(allOption);
+    }
+
     Object.entries(genres).forEach(([id, name]) => {
-        const genreOption = document.createElement("option");
-        genreOption.value = id;
-        genreOption.textContent = name;
-        genreSelector.appendChild(genreOption);
+        if (id === genreFilter) return; 
+        const option = document.createElement("option");
+        option.value = id;
+        option.textContent = name;
+        genreSelector.appendChild(option);
     });
+
+    genreSelector.value = genreFilter;
 }
 
 function buildYearSelector() {
-    const yearOption = document.createElement("option");
-    yearOption.value = "all";
-    yearOption.textContent = "All Years";
-    yearSelector.appendChild(yearOption);
-    const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year >= 1900; year--) {
-        const yearOption = document.createElement("option");
-        yearOption.value = year;
-        yearOption.textContent = year;
-        yearSelector.appendChild(yearOption);
+    const yearFilterValue = new URLSearchParams(window.location.search).get("primary_release_year");
+
+    if (yearFilterValue) {
+        yearFilter = yearFilterValue;
+    } else {
+        yearFilter = "all";
     }
+
+    yearSelector.innerHTML = "";
+
+    const firstOption = document.createElement("option");
+    firstOption.value = yearFilter;
+    firstOption.textContent = yearFilter === "all" ? "All Years" : yearFilter;
+    yearSelector.appendChild(firstOption);
+
+    if (yearFilter !== "all") {
+        const allOption = document.createElement("option");
+        allOption.value = "all";
+        allOption.textContent = "All Years";
+        yearSelector.appendChild(allOption);
+    }
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 1887; year--) {
+        if (year === yearFilter) return; 
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearSelector.appendChild(option);
+    };
+
+    yearSelector.value = yearFilter;
 }
 
 async function updateMovies() {
