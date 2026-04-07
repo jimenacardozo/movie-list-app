@@ -1,4 +1,6 @@
-import { createMovieCard } from "./movie-card.js";
+import { createRoot } from "react-dom/client";
+import { createElement, Fragment } from "react";
+import MovieCard from "./components/movie-card";
 import { fetchGenres } from "./movie-database-service.js";
 import { fetchMovies } from "./movie-database-service.js";
 
@@ -8,6 +10,7 @@ let totalPages = 1;
 let currentPage = 1;
 let nextPage;
 const content = document.getElementById("content-grid");
+const catalogRoot = createRoot(content);
 const nextPageButton = document.getElementById("next-page-button");
 const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById(
@@ -85,7 +88,7 @@ window.addEventListener("popstate", async () => {
     const movies = await updateMovies();
     if (!movies) return;
     showMovieCatalog(movies);
-})
+});
 
 export async function showMovieCatalog(movies) {
     try {
@@ -95,8 +98,13 @@ export async function showMovieCatalog(movies) {
         renderMovieCards(movies);
     } catch (error) {
         console.error("An error occurred:", error);
-        content.innerHTML =
-            "<p class='fallback-message'>An error occurred. Try again later.</p>";
+        catalogRoot.render(
+            createElement(
+                "p",
+                { className: "fallback-message" },
+                "An error occurred. Try again later.",
+            ),
+        );
         pageSelector.style.display = "none";
     }
 }
@@ -126,23 +134,35 @@ function setPageSelectorValues() {
 }
 
 function renderMovieCards(movies) {
-    content.innerHTML = "";
-
     if (movies.results.length <= 0) {
-        content.innerHTML = "<p class='fallback-message'>No movies found</p>";
+        catalogRoot.render(
+            createElement(
+                "p",
+                { className: "fallback-message" },
+                "No movies found",
+            ),
+        );
         pageSelector.style.display = "none";
         return;
     }
-    pageSelector.style.display = "flex";
-    movies.results.forEach((movie) => {
-        const movieCard = createMovieCard(movie, genres);
 
-        content.appendChild(movieCard);
-    });
+    pageSelector.style.display = "flex";
+
+    const cards = movies.results.map((movie, index) =>
+        createElement(MovieCard, {
+            key: movie.id ?? `${movie.title}-${movie.release_date}-${index}`,
+            movie,
+            genres,
+        }),
+    );
+
+    catalogRoot.render(createElement(Fragment, null, ...cards));
 }
 
 function buildGenreSelector() {
-    const genreFilterValue = new URLSearchParams(window.location.search).get("with_genres");
+    const genreFilterValue = new URLSearchParams(window.location.search).get(
+        "with_genres",
+    );
     const hasValidGenreInUrl = genreFilterValue && genres[genreFilterValue];
 
     if (hasValidGenreInUrl) {
@@ -155,7 +175,8 @@ function buildGenreSelector() {
 
     const firstOption = document.createElement("option");
     firstOption.value = genreFilter;
-    firstOption.textContent = genreFilter === "all" ? "All Genres" : genres[genreFilter];
+    firstOption.textContent =
+        genreFilter === "all" ? "All Genres" : genres[genreFilter];
     genreSelector.appendChild(firstOption);
 
     if (genreFilter !== "all") {
@@ -166,7 +187,7 @@ function buildGenreSelector() {
     }
 
     Object.entries(genres).forEach(([id, name]) => {
-        if (id === genreFilter) return; 
+        if (id === genreFilter) return;
         const option = document.createElement("option");
         option.value = id;
         option.textContent = name;
@@ -177,7 +198,9 @@ function buildGenreSelector() {
 }
 
 function buildYearSelector() {
-    const yearFilterValue = new URLSearchParams(window.location.search).get("primary_release_year");
+    const yearFilterValue = new URLSearchParams(window.location.search).get(
+        "primary_release_year",
+    );
 
     if (yearFilterValue) {
         yearFilter = yearFilterValue;
@@ -200,26 +223,31 @@ function buildYearSelector() {
     }
     const currentYear = new Date().getFullYear();
     for (let year = currentYear; year >= 1887; year--) {
-        if (year === yearFilter) return; 
+        if (year === yearFilter) return;
         const option = document.createElement("option");
         option.value = year;
         option.textContent = year;
         yearSelector.appendChild(option);
-    };
+    }
 
     yearSelector.value = yearFilter;
 }
 
 async function updateMovies() {
-    try{
+    try {
         const res = await fetchMovies();
         totalPages = res.total_pages;
 
         return res;
     } catch (error) {
         console.error("An error occurred while fetching movies:", error);
-        content.innerHTML =
-            "<p class='fallback-message'>An error occurred. Try again later.</p>";
+        catalogRoot.render(
+            createElement(
+                "p",
+                { className: "fallback-message" },
+                "An error occurred. Try again later.",
+            ),
+        );
         pageSelector.style.display = "none";
     }
 }
@@ -243,4 +271,3 @@ function setUrl() {
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.pushState({}, "", newUrl);
 }
-
