@@ -1,13 +1,16 @@
 type PageSelectorProps = {
     totalPages: number,
-    currentPage: number
+    currentPage: number,
+    handlePreviousPage: () => void,
+    handleNextPage: () => void,
 }
 
-export default function PageSelector({ totalPages, currentPage }: PageSelectorProps) {
+export default function PageSelector({ totalPages, currentPage, handlePreviousPage, handleNextPage }: PageSelectorProps) {
     return (<div className="page-selector" id="page-selector">
         <button className="page-change-button"
             id="previous-page-button"
             disabled={currentPage === 1}
+            onClick={handlePreviousPage}
         >
             &lt; Previous
         </button>
@@ -24,6 +27,7 @@ export default function PageSelector({ totalPages, currentPage }: PageSelectorPr
         <button className="page-change-button"
             id="next-page-button"
             disabled={currentPage === totalPages}
+            onClick={handleNextPage}
         >
             Next &gt; 
         </button>

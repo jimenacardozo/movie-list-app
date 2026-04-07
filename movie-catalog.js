@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     buildYearSelector();
 });
 
-previousPageButton.addEventListener("click", async () => {
+async function handlePreviousPage() {
     if (currentPage > 1) {
         currentPage = currentPage - 1;
         setUrl();
@@ -42,9 +42,9 @@ previousPageButton.addEventListener("click", async () => {
         if (!movies) return;
         showMovieCatalog(movies);
     }
-});
+}
 
-nextPageButton.addEventListener("click", async () => {
+async function handleNextPage() {
     if (currentPage < totalPages) {
         currentPage = currentPage + 1;
         setUrl();
@@ -52,7 +52,7 @@ nextPageButton.addEventListener("click", async () => {
         if (!movies) return;
         showMovieCatalog(movies);
     }
-});
+}
 
 genreSelector.addEventListener("change", async () => {
     const selectedGenreId = genreSelector.value;
@@ -136,7 +136,12 @@ function setPageSelectorValues() {
     pageSelectorNextPage.innerText = nextPage;
 
     pageSelectorRoot.render(
-        createElement(PageSelector, { totalPages, currentPage }),
+        createElement(PageSelector, {
+            totalPages,
+            currentPage,
+            handlePreviousPage,
+            handleNextPage,
+        }),
     );
 }
 
