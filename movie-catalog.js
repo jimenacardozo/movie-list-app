@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { createElement, Fragment } from "react";
 import MovieCard from "./components/movie-card";
+import PageSelector from "./components/page-selector";
 import { fetchGenres } from "./movie-database-service.js";
 import { fetchMovies } from "./movie-database-service.js";
 
@@ -11,6 +12,8 @@ let currentPage = 1;
 let nextPage;
 const content = document.getElementById("content-grid");
 const catalogRoot = createRoot(content);
+const pageSelectorContainer = document.getElementById("page-selector");
+const pageSelectorRoot = createRoot(pageSelectorContainer);
 const nextPageButton = document.getElementById("next-page-button");
 const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById(
@@ -131,6 +134,10 @@ function setPageSelectorValues() {
 
     pageSelectorPreviousPage.innerText = currentPage;
     pageSelectorNextPage.innerText = nextPage;
+
+    pageSelectorRoot.render(
+        createElement(PageSelector, { totalPages, currentPage }),
+    );
 }
 
 function renderMovieCards(movies) {
