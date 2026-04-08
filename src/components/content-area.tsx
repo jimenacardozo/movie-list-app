@@ -42,9 +42,10 @@ export default function ContentArea() {
     return <div>
         <p>Content area component</p>
         <FiltersContainer />
-        {movies.map((movie, index) => (
-            <MovieCard key={`${movie.title}-${movie.release_date}-${index}`} movie={movie} genres={genres} />
-        ))}
-        <PageSelector />
+        <div className="content" id="content-grid">
+            {movies.map((movie, index) => (
+                <MovieCard key={`${movie.title}-${movie.release_date}-${index}`} movie={movie} genres={genres} />
+            ))}
+        </div>
     </div>
 }
