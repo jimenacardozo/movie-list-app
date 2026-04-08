@@ -87,36 +87,6 @@ async function handleSearchQueryChange(searchQuery) {
         showMovieCatalog(movies);
     }, 500);
 }
-// genreSelector.addEventListener("change", async () => {
-//     const selectedGenreId = genreSelector.value;
-//     genreFilter = selectedGenreId;
-//     currentPage = 1;
-//     setUrl();
-//     const movies = await updateMovies();
-//     if (!movies) return;
-//     showMovieCatalog(movies);
-// });
-
-// yearSelector.addEventListener("change", async () => {
-//     const selectedYear = yearSelector.value;
-//     yearFilter = selectedYear;
-//     currentPage = 1;
-//     setUrl();
-//     const movies = await updateMovies();
-//     if (!movies) return;
-//     showMovieCatalog(movies);
-// });
-
-// inputSearch.addEventListener("input", async () => {
-//     clearTimeout(timeoutId);
-//     timeoutId = setTimeout(async () => {
-//         currentPage = 1;
-//         setUrl();
-//         const movies = await updateMovies();
-//         if (!movies) return;
-//         showMovieCatalog(movies);
-//     }, 500);
-// });
 
 window.addEventListener("popstate", async () => {
     buildGenreSelector();
@@ -254,42 +224,6 @@ function buildFiltersContainer() {
         }),
     );
 }
-
-// function buildYearSelector() {
-//     const yearFilterValue = new URLSearchParams(window.location.search).get(
-//         "primary_release_year",
-//     );
-
-//     if (yearFilterValue) {
-//         yearFilter = yearFilterValue;
-//     } else {
-//         yearFilter = "all";
-//     }
-
-//     yearSelector.innerHTML = "";
-
-//     const firstOption = document.createElement("option");
-//     firstOption.value = yearFilter;
-//     firstOption.textContent = yearFilter === "all" ? "All Years" : yearFilter;
-//     yearSelector.appendChild(firstOption);
-
-//     if (yearFilter !== "all") {
-//         const allOption = document.createElement("option");
-//         allOption.value = "all";
-//         allOption.textContent = "All Years";
-//         yearSelector.appendChild(allOption);
-//     }
-//     const currentYear = new Date().getFullYear();
-//     for (let year = currentYear; year >= 1887; year--) {
-//         if (year === yearFilter) return;
-//         const option = document.createElement("option");
-//         option.value = year;
-//         option.textContent = year;
-//         yearSelector.appendChild(option);
-//     }
-
-//     yearSelector.value = yearFilter;
-// }
 
 async function updateMovies() {
     try {
