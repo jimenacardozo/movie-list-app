@@ -1,4 +1,4 @@
-import greyfavicon from '../img/greyfavicon.png';
+import greyfavicon from "../img/greyfavicon.png";
 
 export default function Footer() {
     return <footer>
