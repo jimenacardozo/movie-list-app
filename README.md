@@ -1,31 +1,73 @@
-# CineVault - Movie List App
+# React + TypeScript + Vite
 
-## API Documentation
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-### Description
-Web app to show the latest trending movies.
+Currently, two official plugins are available:
 
-### Service
-This project uses the [TMDB API](https://developer.themoviedb.org/docs/getting-started).
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-### Endpoints used:
-* `GET /trending/movie/day`: To fetch the daily trending movies for the Hero section and the trending movie list.
-* `GET /genre/movie/list`: To fetch the genres to display in the card labels.
-* **Images:** `https://image.tmdb.org/t/p/` Used to display posters.
-* `GET /movie/{id}`: To get detailed information (runtime, genres, etc.) about a specific movie.
-* `GET /movie/{id}/videos`: To get trailers and clips related to the movie.
-* `GET /search/movie`: To get movies by keywords in the movie title.
-* `GET /search/movie/keyword`: To get movies by keywords in the movie title.
+## React Compiler
 
-### Setup for usage:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-Create a config.js file at the root folder with the following content:
+## Expanding the ESLint configuration
 
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-export const CONFIG = {
-    API_KEY:
-        "your_api_key",
-};
-```
 
-To obtain your API key, follow the steps in https://developer.themoviedb.org/docs/getting-started.
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
