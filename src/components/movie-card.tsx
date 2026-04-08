@@ -1,8 +1,9 @@
+import type { Genre } from "../types/genre";
 import type { Movie } from "../types/movie";
 
 type MovieCardProps = {
     movie: Movie;
-    genres: string[];
+    genres: Genre[];
 };
 
 export default function MovieCard({ movie, genres }: MovieCardProps) {
@@ -20,7 +21,9 @@ export default function MovieCard({ movie, genres }: MovieCardProps) {
             <div className="genre-labels">
                 {
                     movie.genre_ids.map((genreId) => (
-                        <span key={genreId} className="genre-label">{genres[genreId]}</span>
+                        <span key={genreId} className="genre-label">
+                            {genres.find((g) => g.id === genreId)?.name}
+                        </span>
                     ))
                 }
             </div>

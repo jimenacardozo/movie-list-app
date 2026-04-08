@@ -53,15 +53,7 @@ export async function fetchGenres() {
 
         const response = await res.json();
 
-        const responseGenres = response.genres;
-
-        let genres = {};
-
-        for (const genre of responseGenres) {
-            genres[genre.id] = genre.name;
-        }
-
-        return genres;
+        return response.genres;
     } catch (error) {
         console.error("An error occurred:", error);
     }
