@@ -17,7 +17,10 @@ export default function FiltersContainer({ genreFilter, yearFilter, genres, hand
 
     return <div className="filters-container">
         <select name="genre" id="select-genre" className="filter-select" onChange={(e) => handleGenreFilterChange(e.target.value)}>
-            <option value="all">All Genres</option>
+            <option value={genreFilter}>
+                {genreFilter === "all" ? "All Genres" : genres.find(g => g.id.toString() === genreFilter)?.name}
+            </option>
+            {genreFilter !== "all" && <option value="all">All Genres</option>}
             {genres.map((genre) => (
                 <option key={genre.id} value={genre.id}>
                     {genre.name}
