@@ -1,0 +1,30 @@
+import type { Movie } from "../types/movie";
+
+type MovieCardProps = {
+    movie: Movie;
+    genres: string[];
+};
+
+export default function MovieCard({ movie, genres }: MovieCardProps) {
+    const year = movie.release_date.split("-")[0];
+    const moviePosterPath = movie.poster_path ? `https://image.tmdb.org/t/p/original${movie.poster_path}` : "img/fallbackPoster.png";
+
+    return (
+        <div className="movie-card">
+            <div className="movie-card-image-container">
+                <div className="movie-rating-tag">★ {movie.vote_average.toFixed(1)}</div>
+                <img src={moviePosterPath} alt="movie poster" />
+            </div>
+            <h2>{movie.title}</h2>
+            <span className="movie-card-release-date">{year}</span>
+            <div className="genre-labels">
+                {
+                    movie.genre_ids.map((genreId) => (
+                        <span key={genreId} className="genre-label">{genres[genreId]}</span>
+                    ))
+                }
+            </div>
+
+        </div>
+    )
+}
