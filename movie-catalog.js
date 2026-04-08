@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { createElement, Fragment } from "react";
 import MovieCard from "./components/movie-card";
 import PageSelector from "./components/page-selector";
+import FiltersContainer from "./components/filters-container";
 import { fetchGenres } from "./movie-database-service.js";
 import { fetchMovies } from "./movie-database-service.js";
 
@@ -14,6 +15,8 @@ const content = document.getElementById("content-grid");
 const catalogRoot = createRoot(content);
 const pageSelectorContainer = document.getElementById("page-selector");
 const pageSelectorRoot = createRoot(pageSelectorContainer);
+const filtersContainer = document.getElementById("filters-container");
+const filtersContainerRoot = createRoot(filtersContainer);
 const nextPageButton = document.getElementById("next-page-button");
 const previousPageButton = document.getElementById("previous-page-button");
 const pageSelectorPreviousPage = document.getElementById(
@@ -25,13 +28,13 @@ const genreSelector = document.getElementById("select-genre");
 const yearSelector = document.getElementById("select-year");
 let genreFilter = "all";
 let yearFilter = "all";
+let inputSearchQuery = "";
 const inputSearch = document.getElementById("search-movies");
 let timeoutId = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     genres = await fetchGenres();
-    buildGenreSelector();
-    buildYearSelector();
+    buildFiltersContainer();
 });
 
 async function handlePreviousPage() {
@@ -54,27 +57,27 @@ async function handleNextPage() {
     }
 }
 
-genreSelector.addEventListener("change", async () => {
-    const selectedGenreId = genreSelector.value;
-    genreFilter = selectedGenreId;
+async function handleGenreChange(genreId) {
+    console.log(genreId);
+    genreFilter = genreId;
     currentPage = 1;
     setUrl();
     const movies = await updateMovies();
     if (!movies) return;
     showMovieCatalog(movies);
-});
+}
 
-yearSelector.addEventListener("change", async () => {
-    const selectedYear = yearSelector.value;
-    yearFilter = selectedYear;
+async function handleYearChange(year) {
+    yearFilter = year;
     currentPage = 1;
     setUrl();
     const movies = await updateMovies();
     if (!movies) return;
     showMovieCatalog(movies);
-});
+}
 
-inputSearch.addEventListener("input", async () => {
+async function handleSearchQueryChange(searchQuery) {
+    inputSearchQuery = searchQuery;
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
         currentPage = 1;
@@ -83,7 +86,37 @@ inputSearch.addEventListener("input", async () => {
         if (!movies) return;
         showMovieCatalog(movies);
     }, 500);
-});
+}
+// genreSelector.addEventListener("change", async () => {
+//     const selectedGenreId = genreSelector.value;
+//     genreFilter = selectedGenreId;
+//     currentPage = 1;
+//     setUrl();
+//     const movies = await updateMovies();
+//     if (!movies) return;
+//     showMovieCatalog(movies);
+// });
+
+// yearSelector.addEventListener("change", async () => {
+//     const selectedYear = yearSelector.value;
+//     yearFilter = selectedYear;
+//     currentPage = 1;
+//     setUrl();
+//     const movies = await updateMovies();
+//     if (!movies) return;
+//     showMovieCatalog(movies);
+// });
+
+// inputSearch.addEventListener("input", async () => {
+//     clearTimeout(timeoutId);
+//     timeoutId = setTimeout(async () => {
+//         currentPage = 1;
+//         setUrl();
+//         const movies = await updateMovies();
+//         if (!movies) return;
+//         showMovieCatalog(movies);
+//     }, 500);
+// });
 
 window.addEventListener("popstate", async () => {
     buildGenreSelector();
@@ -113,28 +146,6 @@ export async function showMovieCatalog(movies) {
 }
 
 function setPageSelectorValues() {
-    pageSelector.style.display = "flex";
-    nextPage = Math.min(currentPage + 1, totalPages);
-
-    if (currentPage === 1) {
-        previousPageButton.disabled = true;
-    } else {
-        previousPageButton.disabled = false;
-    }
-
-    if (currentPage === totalPages) {
-        nextPageButton.disabled = true;
-        pageSelectorPreviousPage.classList.remove("selector-selected");
-        pageSelectorNextPage.classList.add("selector-selected");
-    } else {
-        pageSelectorPreviousPage.classList.add("selector-selected");
-        pageSelectorNextPage.classList.remove("selector-selected");
-        nextPageButton.disabled = false;
-    }
-
-    pageSelectorPreviousPage.innerText = currentPage;
-    pageSelectorNextPage.innerText = nextPage;
-
     pageSelectorRoot.render(
         createElement(PageSelector, {
             totalPages,
@@ -209,7 +220,18 @@ function buildGenreSelector() {
     genreSelector.value = genreFilter;
 }
 
-function buildYearSelector() {
+function buildFiltersContainer() {
+    const genreFilterValue = new URLSearchParams(window.location.search).get(
+        "with_genres",
+    );
+    const hasValidGenreInUrl = genreFilterValue && genres[genreFilterValue];
+
+    if (hasValidGenreInUrl) {
+        genreFilter = genreFilterValue;
+    } else {
+        genreFilter = "all";
+    }
+
     const yearFilterValue = new URLSearchParams(window.location.search).get(
         "primary_release_year",
     );
@@ -220,30 +242,54 @@ function buildYearSelector() {
         yearFilter = "all";
     }
 
-    yearSelector.innerHTML = "";
-
-    const firstOption = document.createElement("option");
-    firstOption.value = yearFilter;
-    firstOption.textContent = yearFilter === "all" ? "All Years" : yearFilter;
-    yearSelector.appendChild(firstOption);
-
-    if (yearFilter !== "all") {
-        const allOption = document.createElement("option");
-        allOption.value = "all";
-        allOption.textContent = "All Years";
-        yearSelector.appendChild(allOption);
-    }
-    const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year >= 1887; year--) {
-        if (year === yearFilter) return;
-        const option = document.createElement("option");
-        option.value = year;
-        option.textContent = year;
-        yearSelector.appendChild(option);
-    }
-
-    yearSelector.value = yearFilter;
+    filtersContainerRoot.render(
+        createElement(FiltersContainer, {
+            genre: genreFilter,
+            year: yearFilter,
+            searchQuery: inputSearchQuery,
+            genres: Object.entries(genres).map(([id, name]) => ({ id, name })),
+            handleGenreChange,
+            handleYearChange,
+            handleSearchQueryChange,
+        }),
+    );
 }
+
+// function buildYearSelector() {
+//     const yearFilterValue = new URLSearchParams(window.location.search).get(
+//         "primary_release_year",
+//     );
+
+//     if (yearFilterValue) {
+//         yearFilter = yearFilterValue;
+//     } else {
+//         yearFilter = "all";
+//     }
+
+//     yearSelector.innerHTML = "";
+
+//     const firstOption = document.createElement("option");
+//     firstOption.value = yearFilter;
+//     firstOption.textContent = yearFilter === "all" ? "All Years" : yearFilter;
+//     yearSelector.appendChild(firstOption);
+
+//     if (yearFilter !== "all") {
+//         const allOption = document.createElement("option");
+//         allOption.value = "all";
+//         allOption.textContent = "All Years";
+//         yearSelector.appendChild(allOption);
+//     }
+//     const currentYear = new Date().getFullYear();
+//     for (let year = currentYear; year >= 1887; year--) {
+//         if (year === yearFilter) return;
+//         const option = document.createElement("option");
+//         option.value = year;
+//         option.textContent = year;
+//         yearSelector.appendChild(option);
+//     }
+
+//     yearSelector.value = yearFilter;
+// }
 
 async function updateMovies() {
     try {
@@ -266,17 +312,17 @@ async function updateMovies() {
 
 function setUrl() {
     const params = new URLSearchParams();
-    let search = inputSearch.value;
+    let search = inputSearchQuery;
 
     if (yearFilter !== "all") params.set("primary_release_year", yearFilter);
     if (currentPage !== 1) params.set("page", currentPage);
     if (search) {
-        genreFilter = "all";
-        genreSelector.value = "all";
-        genreSelector.disabled = true;
+        // genreFilter = "all";
+        // genreSelector.value = "all";
+        // genreSelector.disabled = true;
         params.set("query", search);
     } else {
-        genreSelector.disabled = false;
+        // genreSelector.disabled = false;
         if (genreFilter !== "all") params.set("with_genres", genreFilter);
     }
 
