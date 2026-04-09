@@ -24,6 +24,7 @@ export default function ContentArea() {
         const params = new URLSearchParams(window.location.search);
         return params.get("primary_release_year") ?? "all";
     });
+    const [search, setSearch] = useState<string>("");
     const [searchParams, setSearchParams] = useState(window.location.search);
 
 
@@ -45,7 +46,6 @@ export default function ContentArea() {
         const getGenres = async () => {
             try {
                 const response = await fetchGenres();
-                console.log(response);
                 setGenres(response);
             } catch (error) {
                 console.error("Error fetching genres:", error);
@@ -59,6 +59,10 @@ export default function ContentArea() {
         const setUrl = () => {
             const params = new URLSearchParams();
 
+            if (search.trim() !== "") {
+                params.set("query", search.trim());
+                setGenreFilter("all");
+            }
             if (currentPage !== 1) params.set("page", `${currentPage}`);
             if (genreFilter !== "all") params.set("with_genres", genreFilter);
             if (yearFilter !== "all") params.set("primary_release_year", yearFilter);
@@ -71,7 +75,7 @@ export default function ContentArea() {
             setSearchParams(params.toString() ? `?${params.toString()}` : "");
         };
         setUrl();
-    }, [currentPage, genreFilter, yearFilter]);
+    }, [currentPage, genreFilter, yearFilter, search]);
 
     function handlePreviousPage() {
         setCurrentPage((current) => Math.max(current - 1, 1));
@@ -91,6 +95,11 @@ export default function ContentArea() {
         setCurrentPage(1);
     }
 
+    function handleSearchChange(newSearch: string) {
+        setSearch(newSearch);
+        setCurrentPage(1);
+    }
+
 
     return <div className="content-area">
         <p>Content area component</p>
@@ -98,8 +107,10 @@ export default function ContentArea() {
             genreFilter={genreFilter}
             yearFilter={yearFilter}
             genres={genres}
+            search={search}
             handleGenreFilterChange={handleGenreFilterChange}
             handleYearFilterChange={handleYearFilterChange}
+            handleSearchChange={handleSearchChange}
         />
         <div className="content" id="content-grid">
             {movies.map((movie, index) => (
