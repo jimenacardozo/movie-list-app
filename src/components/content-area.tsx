@@ -89,7 +89,7 @@ export default function ContentArea() {
             setSearchParams(params.toString() ? `?${params.toString()}` : "");
         };
         setUrl();
-    }, [currentPage, genreFilter, yearFilter, search]);
+    }, [currentPage, genreFilter, yearFilter, search, genresError, moviesError]);
 
     function handlePreviousPage() {
         setCurrentPage((current) => Math.max(current - 1, 1));
