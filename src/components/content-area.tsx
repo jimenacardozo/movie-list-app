@@ -32,9 +32,9 @@ export default function ContentArea() {
 
     useEffect(() => {
         const getMovies = async () => {
+            setMoviesError(null);
             try {
                 const response = await fetchMovies() as FetchMoviesResponse;
-                setMoviesError(null);
                 setMovies(response.results);
                 setTotalPages(response.total_pages);
             } catch (error) {
@@ -44,13 +44,13 @@ export default function ContentArea() {
         };
 
         getMovies();
-    }, [searchParams, moviesError]);
+    }, [searchParams]);
 
     useEffect(() => {
         const getGenres = async () => {
+            setGenresError(null);
             try {
                 const response = await fetchGenres();
-                setGenresError(null);
                 setGenres(response);
             } catch (error) {
                 console.error("Error fetching genres:", error);
@@ -59,19 +59,11 @@ export default function ContentArea() {
         };
 
         getGenres();
-    }, [genresError]);
+    }, []);
 
     useEffect(() => {
         const setUrl = () => {
             const params = new URLSearchParams();
-
-            if (genresError !== null) {
-                setGenresError(null);
-            }
-
-            if (moviesError !== null) {
-                setMoviesError(null);
-            }
 
             if (search.trim() !== "") {
                 params.set("query", search.trim());
@@ -89,7 +81,7 @@ export default function ContentArea() {
             setSearchParams(params.toString() ? `?${params.toString()}` : "");
         };
         setUrl();
-    }, [currentPage, genreFilter, yearFilter, search, genresError, moviesError]);
+    }, [currentPage, genreFilter, yearFilter, search]);
 
     function handlePreviousPage() {
         setCurrentPage((current) => Math.max(current - 1, 1));
