@@ -6,13 +6,14 @@ interface FiltersContainerProps {
     yearFilter: string;
     genres: Genre[];
     search: string;
+    genresError: string | null;
     handleGenreFilterChange: (genre: string) => void;
     handleYearFilterChange: (year: string) => void;
     handleSearchChange: (search: string) => void;
 }
 
 
-export default function FiltersContainer({ genreFilter, yearFilter, genres, search, handleGenreFilterChange, handleYearFilterChange, handleSearchChange }: FiltersContainerProps) {
+export default function FiltersContainer({ genreFilter, yearFilter, genres, search, genresError, handleGenreFilterChange, handleYearFilterChange, handleSearchChange }: FiltersContainerProps) {
     const currentYear = new Date().getFullYear();
     const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -22,7 +23,7 @@ export default function FiltersContainer({ genreFilter, yearFilter, genres, sear
     }
 
     return <div className="filters-container">
-        <select name="genre" id="select-genre" className="filter-select" value={search !== "" ? "all" : genreFilter} disabled={search !== ""} onChange={(e) => handleGenreFilterChange(e.target.value)}>
+        <select name="genre" id="select-genre" className="filter-select" value={search !== "" ? "all" : genreFilter} disabled={search !== "" || genresError !== null} onChange={(e) => handleGenreFilterChange(e.target.value)}>
             <option value="all">All Genres</option>
             {genres.map((genre) => (
                 <option key={genre.id} value={genre.id}>

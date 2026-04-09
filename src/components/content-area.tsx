@@ -26,38 +26,52 @@ export default function ContentArea() {
     });
     const [search, setSearch] = useState<string>("");
     const [searchParams, setSearchParams] = useState(window.location.search);
+    const [moviesError, setMoviesError] = useState<string | null>(null);
+    const [genresError, setGenresError] = useState<string | null>(null);
 
 
     useEffect(() => {
         const getMovies = async () => {
             try {
                 const response = await fetchMovies() as FetchMoviesResponse;
+                setMoviesError(null);
                 setMovies(response.results);
                 setTotalPages(response.total_pages);
             } catch (error) {
                 console.error("Error fetching movies:", error);
+                setMoviesError("An error has occurred. Try again later.");
             }
         };
 
         getMovies();
-    }, [searchParams]);
+    }, [searchParams, moviesError]);
 
     useEffect(() => {
         const getGenres = async () => {
             try {
                 const response = await fetchGenres();
+                setGenresError(null);
                 setGenres(response);
             } catch (error) {
                 console.error("Error fetching genres:", error);
+                setGenresError("Failed to fetch genres.");
             }
         };
 
         getGenres();
-    }, []);
+    }, [genresError]);
 
     useEffect(() => {
         const setUrl = () => {
             const params = new URLSearchParams();
+
+            if (genresError !== null) {
+                setGenresError(null);
+            }
+
+            if (moviesError !== null) {
+                setMoviesError(null);
+            }
 
             if (search.trim() !== "") {
                 params.set("query", search.trim());
@@ -108,20 +122,24 @@ export default function ContentArea() {
             yearFilter={yearFilter}
             genres={genres}
             search={search}
+            genresError={genresError}
             handleGenreFilterChange={handleGenreFilterChange}
             handleYearFilterChange={handleYearFilterChange}
             handleSearchChange={handleSearchChange}
         />
-        <div className="content" id="content-grid">
-            {movies.map((movie, index) => (
-                <MovieCard key={`${movie.title}-${movie.release_date}-${index}`} movie={movie} genres={genres} />
-            ))}
-        </div>
-        <PageSelector
-            totalPages={totalPages}
-            currentPage={currentPage}
-            handlePreviousPage={handlePreviousPage}
-            handleNextPage={handleNextPage}
-        />
+        {moviesError ? <p className="fallback-message">{moviesError}</p> : 
+            <div className="content" id="content-grid">
+                {movies.map((movie, index) => (
+                    <MovieCard key={`${movie.title}-${movie.release_date}-${index}`} movie={movie} genres={genres} />
+                ))}
+            </div>}
+        {!moviesError && (
+            <PageSelector
+                totalPages={totalPages}
+                currentPage={currentPage}
+                handlePreviousPage={handlePreviousPage}
+                handleNextPage={handleNextPage}
+            />
+        )}
     </div>
 }

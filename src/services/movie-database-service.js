@@ -40,7 +40,6 @@ export async function fetchMovieVideos(movieDetails) {
 }
 
 export async function fetchGenres() {
-    try {
         const res = await fetch(`${apiBaseUrl}/genre/movie/list`, {
             method: "GET",
             headers: {
@@ -54,9 +53,6 @@ export async function fetchGenres() {
         const response = await res.json();
 
         return response.genres;
-    } catch (error) {
-        console.error("An error occurred:", error);
-    }
 }
 
 export async function fetchMovies() {
