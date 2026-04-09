@@ -116,7 +116,6 @@ export default function ContentArea() {
 
 
     return <div className="content-area">
-        <p>Content area component</p>
         <FiltersContainer
             genreFilter={genreFilter}
             yearFilter={yearFilter}
