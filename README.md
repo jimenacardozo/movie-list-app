@@ -30,4 +30,8 @@ export const CONFIG = {
 };
 ```
 
+`npm install` to install dependencies.
+
+`npm run dev` to run the app.
+
 To obtain your API key, follow the steps in https://developer.themoviedb.org/docs/getting-started.
