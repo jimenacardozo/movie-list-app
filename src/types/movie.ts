@@ -1,4 +1,5 @@
 export interface Movie {
+    "id": number;
     "title": string;
     "genre_ids": number[];
     "poster_path": string;

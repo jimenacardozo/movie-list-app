@@ -120,8 +120,8 @@ export default function ContentArea() {
         />
         {moviesError ? <p className="fallback-message">{moviesError}</p> : 
             <div className="content" id="content-grid">
-                {movies.map((movie, index) => (
-                    <MovieCard key={`${movie.title}-${movie.release_date}-${index}`} movie={movie} genres={genres} />
+                {movies.map((movie) => (
+                    <MovieCard key={movie.id} movie={movie} genres={genres} />
                 ))}
             </div>}
         {!moviesError && (
