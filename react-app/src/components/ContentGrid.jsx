@@ -1,23 +1,26 @@
 import MovieCard from "./MovieCard";
 
-export default function ContentGrid() {
-    const fakeMovie = {
-        title: "El Señor de los Anillos: El Retorno del Rey",
-        release_date: "2003-12-17",
-        poster_path: "/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg", 
-        vote_average: 8.5,
-        genre_ids: [12, 14, 28]
+export default function ContentGrid({ movies, genres, loading, error }) {
+    if (error) {
+        return (
+            <div className="content" id="content-grid">
+                <p className="fallback-message">{error}</p>
+            </div>
+        );
     };
-    const fakeGenres = {
-        12: "Aventura",
-        14: "Fantasía",
-        28: "Acción"
+
+    if (!movies || movies.results.length === 0) {
+        return (
+            <div className="content" id="content-grid">
+                <p className="fallback-message">No movies found</p>
+            </div>
+        );
     };
     return (
         <div className="content" id="content-grid">
-            <MovieCard movie={fakeMovie} genres={fakeGenres} />
-            <MovieCard movie={fakeMovie} genres={fakeGenres} />
-            <MovieCard movie={fakeMovie} genres={fakeGenres} />
+            {movies.results.map(movie => {
+                return <MovieCard key={movie.id} movie={movie} genres={genres}></MovieCard>
+            })}
         </div>
     );
 }
