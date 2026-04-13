@@ -11,7 +11,6 @@ export default function HeroSection() {
     const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
 
     useEffect(() => {
-        console.log("Hero section component mounted");
         let dayTrendingMovies: FetchMoviesResponse;
         let movieDetails: MovieDetails | null = null;
 
@@ -31,9 +30,10 @@ export default function HeroSection() {
 
     }, []);
 
-    return <div className="hero-background">
+    return <div id="hero">
+        <div className="hero-background" style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w500${heroMovie?.poster_path})` }}></div>
         <div className="hero-content">
-            <img src={heroMovie?.poster_path ? `https://image.tmdb.org/t/p/w500${heroMovie.poster_path}` : "../img/fallbackPoster.png"} alt={heroMovie?.title || "Movie poster"} />
+            <img className="hero-image" src={heroMovie?.poster_path ? `https://image.tmdb.org/t/p/w500${heroMovie.poster_path}` : "../img/fallbackPoster.png"} alt={heroMovie?.title || "Movie poster"} />
             <div className="hero-info">
                 <span className="trending-tag">#1 Trending</span>
                 <h1>{heroMovie?.title}</h1>
@@ -41,19 +41,20 @@ export default function HeroSection() {
                     <span className="rating">★ {movieDetails?.vote_average?.toFixed(1)}</span>
                     <span className="year">{movieDetails?.release_date}</span>
                     <span className="duration">◴ {movieDetails?.runtime} min</span>
-                </div>
-                <div>
-                    {movieDetails?.genres.map((genre) => (
-                        <span key={genre} className="genre">{genre}</span>
-                    ))}
+                    <div>
+                        {movieDetails?.genres.map((genre) => (
+                            <span key={genre.id} className="genre">{genre.name}</span>
+                        ))}
+                    </div>
                 </div>
                 <p className="hero-description">{heroMovie?.overview}</p>
                 {movieTrailer && (
-                    <a href={`https://www.youtube.com/watch?v=${movieTrailer.key}`} target="_blank" rel="noopener noreferrer" className="trailer-button">
-                        Watch Trailer
+                    <a href={`https://www.youtube.com/watch?v=${movieTrailer.key}`} target="_blank" rel="noopener noreferrer" className="button-trailer">
+                        ▶ Watch Trailer
                     </a>
                 )}
             </div>
         </div>
     </div>
+
 }
