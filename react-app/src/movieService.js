@@ -1,4 +1,4 @@
-import { CONFIG } from "../config.js";
+import { CONFIG } from "./config.js";
 
 const API_BASE = "https://api.themoviedb.org/3";
 
@@ -37,7 +37,6 @@ export async function fetchGenres() {
     });
     if (!res.ok) throw new Error(`Error fetching genres: ${res.status}`);
     const data = await res.json();
-    // Convert array to { id: name } map
     return Object.fromEntries(data.genres.map((g) => [g.id, g.name]));
 }
 
