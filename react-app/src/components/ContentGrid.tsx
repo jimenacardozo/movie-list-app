@@ -1,6 +1,6 @@
 import MovieCard from "./MovieCard";
 
-export default function ContentGrid({ movies, genres, error }) {
+export default function ContentGrid({ movies, genres, error }: any) {
     if (error) {
         return (
             <div className="content" id="content-grid">
