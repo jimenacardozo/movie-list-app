@@ -15,7 +15,7 @@ export async function fetchTrendingMovies() {
     return res.json();
 }
 
-export async function fetchMovieDetails(movieId) {
+export async function fetchMovieDetails(movieId: any) {
     const res = await fetch(`${API_BASE}/movie/${movieId}`, {
         headers
     });
@@ -23,7 +23,7 @@ export async function fetchMovieDetails(movieId) {
     return res.json();
 }
 
-export async function fetchMovieVideos(movieId) {
+export async function fetchMovieVideos(movieId: any) {
     const res = await fetch(`${API_BASE}/movie/${movieId}/videos`, {
         headers
     });
@@ -37,14 +37,14 @@ export async function fetchGenres() {
     });
     if (!res.ok) throw new Error(`Error fetching genres: ${res.status}`);
     const data = await res.json();
-    return Object.fromEntries(data.genres.map((g) => [g.id, g.name]));
+    return Object.fromEntries(data.genres.map((g: any) => [g.id, g.name]));
 }
 
-export async function fetchMovies(params = {}) {
+export async function fetchMovies(params: any = {}) {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([k, v]) => {
         if (v !== undefined && v !== null && v !== "" && v !== "all") {
-            searchParams.set(k, v);
+            searchParams.set(k, v as string);
         }
     });
 
@@ -55,7 +55,7 @@ export async function fetchMovies(params = {}) {
     return res.json();
 }
 
-export function determineEndpoint(params) {
+export function determineEndpoint(params: any) {
     if (params.query && params.query.trim() !== "") {
         return `${API_BASE}/search/movie`;
     }
