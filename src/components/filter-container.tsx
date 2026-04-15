@@ -1,5 +1,6 @@
 import type { Genre } from "../types/genre";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import { UserContext } from "./context";
 
 interface FiltersContainerProps {
     genreFilter: string;
@@ -16,6 +17,7 @@ interface FiltersContainerProps {
 export default function FiltersContainer({ genreFilter, yearFilter, genres, search, genresError, handleGenreFilterChange, handleYearFilterChange, handleSearchChange }: FiltersContainerProps) {
     const currentYear = new Date().getFullYear();
     const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const user = useContext(UserContext);
 
     const years: number[] = [];
     for (let y = currentYear; y >= 1887; y--) {
@@ -43,5 +45,6 @@ export default function FiltersContainer({ genreFilter, yearFilter, genres, sear
                 handleSearchChange(e.target.value);
             }, 500)
         }} />
+        {user.isLoggedIn && <p style={{ color: "white" }}>Welcome, {user.name}!</p>}
     </div>
 }

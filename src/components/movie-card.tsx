@@ -1,5 +1,6 @@
 import type { Genre } from "../types/genre";
 import type { Movie } from "../types/movie";
+import UserDetails from "./user-details";
 
 type MovieCardProps = {
     movie: Movie;
@@ -27,7 +28,10 @@ export default function MovieCard({ movie, genres }: MovieCardProps) {
                     ))
                 }
             </div>
-
+            <details>
+                <summary>User Details</summary>
+                <UserDetails />
+            </details>
         </div>
     )
 }

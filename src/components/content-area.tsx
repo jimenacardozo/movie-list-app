@@ -7,6 +7,8 @@ import { fetchGenres } from "../services/movie-database-service";
 import MovieCard from "./movie-card";
 import type { Genre } from "../types/genre";
 import useFetchMovies from '../hooks/useFetchMovies';
+import { UserContext } from './context';
+import type { User } from '../types/user';
 
 export default function ContentArea() {
     const [genres, setGenres] = useState<Genre[]>([]);
@@ -25,6 +27,9 @@ export default function ContentArea() {
     const [search, setSearch] = useState<string>("");
     const [searchParams, setSearchParams] = useState(window.location.search);
     const [genresError, setGenresError] = useState<string | null>(null);
+    const [user, setUser] = useState<User>({ id: 1, name: "Javi", email: "javi@example.com", isLoggedIn: true });
+
+
     const { movies, totalPages, moviesError } = useFetchMovies(searchParams);
 
     useEffect(() => {
@@ -88,23 +93,32 @@ export default function ContentArea() {
     }
 
 
+    function handleLoginToggle() {
+        setUser((current) => ({ ...current, isLoggedIn: !current.isLoggedIn }));
+    }
+
     return <div className={styles['content-area']}>
-        <FiltersContainer
-            genreFilter={genreFilter}
-            yearFilter={yearFilter}
-            genres={genres}
-            search={search}
-            genresError={genresError}
-            handleGenreFilterChange={handleGenreFilterChange}
-            handleYearFilterChange={handleYearFilterChange}
-            handleSearchChange={handleSearchChange}
-        />
-        {moviesError ? <p className={styles['fallback-message']}>{moviesError}</p> :
-            <div className={styles.content} id="content-grid">
-                {movies.map((movie) => (
-                    <MovieCard key={movie.id} movie={movie} genres={genres} />
-                ))}
-            </div>}
+        <UserContext.Provider value={user}>
+            <button className={styles['login-button']} onClick={handleLoginToggle}>
+                {user.isLoggedIn ? "Logout" : "Login"}
+            </button>
+            <FiltersContainer
+                genreFilter={genreFilter}
+                yearFilter={yearFilter}
+                genres={genres}
+                search={search}
+                genresError={genresError}
+                handleGenreFilterChange={handleGenreFilterChange}
+                handleYearFilterChange={handleYearFilterChange}
+                handleSearchChange={handleSearchChange}
+            />
+            {moviesError ? <p className={styles['fallback-message']}>{moviesError}</p> :
+                <div className={styles.content} id="content-grid">
+                    {movies.map((movie) => (
+                        <MovieCard key={movie.id} movie={movie} genres={genres} />
+                    ))}
+                </div>}
+        </UserContext.Provider>
         {!moviesError && (
             <PageSelector
                 totalPages={totalPages}
