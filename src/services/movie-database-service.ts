@@ -1,8 +1,13 @@
 import { CONFIG } from "../../config.js";
+import type { Movie } from "../types/movie";
+import type { MovieDetails } from "../types/movie-details";
+import type { FetchMoviesResponse } from "../types/fetch-movies-response";
+import type { Genre } from "../types/genre";
+import type { VideoDataResponse } from "../types/video-data-response";
 
 const apiBaseUrl = "https://api.themoviedb.org/3";
 
-export async function fetchTrendingMovies() {
+export async function fetchTrendingMovies(): Promise<FetchMoviesResponse> {
     const res = await fetch(`${apiBaseUrl}/trending/movie/day`, {
         method: "GET",
         headers: {
@@ -13,20 +18,20 @@ export async function fetchTrendingMovies() {
 
     if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
 
-    return await res.json();
+    return res.json() as Promise<FetchMoviesResponse>;
 }
 
-export async function fetchMovieDetails(heroMovie) {
-    let response = await fetch(`${apiBaseUrl}/movie/${heroMovie.id}`, {
+export async function fetchMovieDetails(heroMovie: Movie): Promise<MovieDetails> {
+    const response = await fetch(`${apiBaseUrl}/movie/${heroMovie.id}`, {
         headers: {
             Authorization: `Bearer ${CONFIG.API_KEY}`,
             accept: "application/json",
         },
     });
-    return response.json();
+    return response.json() as Promise<MovieDetails>;
 }
 
-export async function fetchMovieVideos(movieDetails) {
+export async function fetchMovieVideos(movieDetails: MovieDetails): Promise<VideoDataResponse> {
     const response = await fetch(
         `${apiBaseUrl}/movie/${movieDetails.id}/videos`,
         {
@@ -36,26 +41,26 @@ export async function fetchMovieVideos(movieDetails) {
             },
         },
     );
-    return response.json();
+    return response.json() as Promise<VideoDataResponse>;
 }
 
-export async function fetchGenres() {
-        const res = await fetch(`${apiBaseUrl}/genre/movie/list`, {
-            method: "GET",
-            headers: {
-                accept: "application/json",
-                Authorization: `Bearer ${CONFIG.API_KEY}`,
-            },
-        });
+export async function fetchGenres(): Promise<Genre[]> {
+    const res = await fetch(`${apiBaseUrl}/genre/movie/list`, {
+        method: "GET",
+        headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${CONFIG.API_KEY}`,
+        },
+    });
 
-        if (!res.ok) throw new Error("Error fetching genres");
+    if (!res.ok) throw new Error("Error fetching genres");
 
-        const response = await res.json();
+    const response = await res.json() as { genres: Genre[] };
 
-        return response.genres;
+    return response.genres;
 }
 
-export async function fetchMovies() {
+export async function fetchMovies(): Promise<FetchMoviesResponse> {
     const params = new URLSearchParams(window.location.search);
     const endpoint = determineEndpoint(params);
     const queryString = params.toString() ? `?${params.toString()}` : "";
@@ -69,11 +74,11 @@ export async function fetchMovies() {
     });
     if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
-    return await response.json();
+    return response.json() as Promise<FetchMoviesResponse>;
 }
 
-function determineEndpoint(params) {
-    if (params.has("query") && params.get("query").trim() !== "") {
+function determineEndpoint(params: URLSearchParams): string {
+    if (params.has("query") && params.get("query")!.trim() !== "") {
         return `${apiBaseUrl}/search/movie`;
     }
     if (params.has("primary_release_year") || params.has("with_genres")) {
