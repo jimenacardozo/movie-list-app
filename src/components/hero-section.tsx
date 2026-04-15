@@ -1,38 +1,8 @@
-import { useEffect, useState } from "react"
-import { fetchTrendingMovies, fetchMovieVideos, fetchMovieDetails } from "../services/movie-database-service";
-import type { Movie } from "../types/movie";
-import type { Video } from '../types/video';
-import type { MovieDetails } from "../types/movie-details";
-import type { FetchMoviesResponse } from "../types/fetch-movies-response";
+import useHeroSection from "../hooks/useHeroSection";
 
 export default function HeroSection() {
-    const [heroMovie, setHeroMovie] = useState<Movie | null>(null);
-    const [movieTrailer, setMovieTrailer] = useState<Video | null>(null);
-    const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
-    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-
-        const getTrendingMovies = async () => {
-            try {
-                const dayTrendingMovies: FetchMoviesResponse = await fetchTrendingMovies();
-                setHeroMovie(dayTrendingMovies.results[0]);
-                const movieDetails: MovieDetails = await fetchMovieDetails(dayTrendingMovies.results[0]);
-                setMovieDetails(movieDetails);
-                const trailer = await fetchMovieVideos(movieDetails).then((videos) => videos.results.find(
-                    (vid) => vid.type === "Trailer" && vid.site === "YouTube",
-                ));
-                setMovieTrailer(trailer || null);
-
-            } catch (error) {
-                console.error("Error fetching trending movies:", error);
-                setError("Unable to load hero content at this time. Please try again later.");
-            }
-        }
-
-        getTrendingMovies();
-
-    }, []);
+    const { heroMovie, movieTrailer, movieDetails, error } = useHeroSection();
 
     return <div id="hero">{(error || !heroMovie || !movieDetails) ?
         (<div className="hero-error">

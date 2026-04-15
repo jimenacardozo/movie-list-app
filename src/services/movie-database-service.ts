@@ -7,13 +7,14 @@ import type { VideoDataResponse } from "../types/video-data-response";
 
 const apiBaseUrl = "https://api.themoviedb.org/3";
 
-export async function fetchTrendingMovies(): Promise<FetchMoviesResponse> {
+export async function fetchTrendingMovies(signal?: AbortSignal): Promise<FetchMoviesResponse> {
     const res = await fetch(`${apiBaseUrl}/trending/movie/day`, {
         method: "GET",
         headers: {
             accept: "application/json",
             Authorization: `Bearer ${CONFIG.API_KEY}`,
         },
+        signal,
     });
 
     if (!res.ok) throw new Error(`Error fetching movies: ${res.status}`);
@@ -21,17 +22,18 @@ export async function fetchTrendingMovies(): Promise<FetchMoviesResponse> {
     return res.json() as Promise<FetchMoviesResponse>;
 }
 
-export async function fetchMovieDetails(heroMovie: Movie): Promise<MovieDetails> {
+export async function fetchMovieDetails(heroMovie: Movie, signal?: AbortSignal): Promise<MovieDetails> {
     const response = await fetch(`${apiBaseUrl}/movie/${heroMovie.id}`, {
         headers: {
             Authorization: `Bearer ${CONFIG.API_KEY}`,
             accept: "application/json",
         },
+        signal,
     });
     return response.json() as Promise<MovieDetails>;
 }
 
-export async function fetchMovieVideos(movieDetails: MovieDetails): Promise<VideoDataResponse> {
+export async function fetchMovieVideos(movieDetails: MovieDetails, signal?: AbortSignal): Promise<VideoDataResponse> {
     const response = await fetch(
         `${apiBaseUrl}/movie/${movieDetails.id}/videos`,
         {
@@ -39,6 +41,7 @@ export async function fetchMovieVideos(movieDetails: MovieDetails): Promise<Vide
                 Authorization: `Bearer ${CONFIG.API_KEY}`,
                 accept: "application/json",
             },
+            signal,
         },
     );
     return response.json() as Promise<VideoDataResponse>;
