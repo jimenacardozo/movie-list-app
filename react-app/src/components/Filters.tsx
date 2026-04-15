@@ -1,9 +1,65 @@
-export default function Filters(){
-    return(
+interface Genres {
+    [key: string]: string;
+}
+
+interface FiltersProps {
+    genres: Genres;
+    genreFilter: string;
+    yearFilter: string;
+    searchQuery: string;
+    onGenreChange: (value: string) => void;
+    onYearChange: (value: string) => void;
+    onSearchChange: (value: string) => void;
+}
+
+export default function Filters({
+    genres,
+    genreFilter,
+    yearFilter,
+    searchQuery,
+    onGenreChange,
+    onYearChange,
+    onSearchChange
+}: FiltersProps) {
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: currentYear - 1887 + 1 }, (_, i) => currentYear - i);
+    
+    const isSearchActive = searchQuery.trim() !== '';
+
+    return (
         <nav className="filters-container">
-            <select name="genre" id="select-genre" className="filter-select"></select>
-            <select name="years" id="select-year" className="filter-select"></select>
-            <input type="search" name="search movies" id="search-movies" placeholder="Search movies..." className="filter-select"/>
+            <select
+                name="genre"
+                className="filter-select"
+                value={genreFilter} // React maneja la selección aquí
+                disabled={isSearchActive}
+                onChange={(e) => onGenreChange(e.target.value)}
+            >
+                <option value="">All Genres</option>
+                {Object.entries(genres).map(([id, name]) => (
+                    <option key={id} value={id}>{name}</option>
+                ))}
+            </select>
+
+            <select
+                name="years"
+                className="filter-select"
+                value={yearFilter} // React maneja la selección aquí
+                onChange={(e) => onYearChange(e.target.value)}
+            >
+                <option value="">All Years</option>
+                {years.map(year => (
+                    <option key={year} value={year.toString()}>{year}</option>
+                ))}
+            </select>
+
+            <input
+                type="search"
+                placeholder="Search movies..."
+                className="filter-select"
+                value={searchQuery} // Componente controlado
+                onChange={(e) => onSearchChange(e.target.value)}
+            />
         </nav>
     );
 }
