@@ -1,6 +1,8 @@
 import type { Genre } from "../types/genre";
 import type { Movie } from "../types/movie";
-import UserDetails from "./user-details";
+import UserDetails from "./user-details"; 
+import { UserContext } from "./context";
+import { useContext } from "react";
 
 type MovieCardProps = {
     movie: Movie;
@@ -10,6 +12,7 @@ type MovieCardProps = {
 export default function MovieCard({ movie, genres }: MovieCardProps) {
     const year = movie.release_date.split("-")[0];
     const moviePosterPath = movie.poster_path ? `https://image.tmdb.org/t/p/original${movie.poster_path}` : "img/fallbackPoster.png";
+    const user = useContext(UserContext);
 
     return (
         <div className="movie-card">
@@ -28,10 +31,10 @@ export default function MovieCard({ movie, genres }: MovieCardProps) {
                     ))
                 }
             </div>
-            <details>
-                <summary>User Details</summary>
+            {user.isLoggedIn && <details>
+                <summary className="text-white p-4">User Details</summary>
                 <UserDetails />
-            </details>
+            </details>}
         </div>
     )
 }
