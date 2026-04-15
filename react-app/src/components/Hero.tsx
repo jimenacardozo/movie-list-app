@@ -17,7 +17,7 @@ export default function Hero() {
                 vote_average: 8.8,
                 genre_ids: [28, 878, 12],
                 overview: "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños, recibe la tarea inversa de plantar una idea en la mente de un CEO.",
-                duration: "148 min", 
+                duration: "148 min",
                 trailerURL: "https://www.youtube.com/watch?v=YoHD9XEInc0"
             },
         ]
@@ -43,7 +43,7 @@ export default function Hero() {
         <section id="hero">
             <div
                 className="hero-background"
-                style={{ '--bg-image': `url(${posterSrc})` }}
+                style={{ '--bg-image': `url(${posterSrc})` } as any}
             />
             <div className="hero-content">
                 <img className="hero-image" src={posterSrc} alt={heroData.title} />
