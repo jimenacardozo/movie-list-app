@@ -1,17 +1,15 @@
+import styles from './content-area.module.css';
 import FiltersContainer from "./filter-container"
 import PageSelector from './page-selector';
-import type { Movie } from '../types/movie';
-import type { FetchMoviesResponse } from '../types/fetch-movies-response';
 import { useEffect } from "react";
 import { useState } from "react";
-import { fetchMovies, fetchGenres } from "../services/movie-database-service";
+import { fetchGenres } from "../services/movie-database-service";
 import MovieCard from "./movie-card";
 import type { Genre } from "../types/genre";
+import useFetchMovies from '../hooks/useFetchMovies';
 
 export default function ContentArea() {
-    const [movies, setMovies] = useState<Movie[]>([]);
     const [genres, setGenres] = useState<Genre[]>([]);
-    const [totalPages, setTotalPages] = useState<number>(1);
     const [currentPage, setCurrentPage] = useState<number>(() => {
         const params = new URLSearchParams(window.location.search);
         return parseInt(params.get("page") ?? "1", 10);
@@ -26,25 +24,8 @@ export default function ContentArea() {
     });
     const [search, setSearch] = useState<string>("");
     const [searchParams, setSearchParams] = useState(window.location.search);
-    const [moviesError, setMoviesError] = useState<string | null>(null);
     const [genresError, setGenresError] = useState<string | null>(null);
-
-
-    useEffect(() => {
-        const getMovies = async () => {
-            setMoviesError(null);
-            try {
-                const response = await fetchMovies() as FetchMoviesResponse;
-                setMovies(response.results);
-                setTotalPages(response.total_pages);
-            } catch (error) {
-                console.error("Error fetching movies:", error);
-                setMoviesError("An error has occurred. Try again later.");
-            }
-        };
-
-        getMovies();
-    }, [searchParams]);
+    const { movies, totalPages, moviesError } = useFetchMovies(searchParams);
 
     useEffect(() => {
         const getGenres = async () => {
@@ -107,7 +88,7 @@ export default function ContentArea() {
     }
 
 
-    return <div className="content-area">
+    return <div className={styles['content-area']}>
         <FiltersContainer
             genreFilter={genreFilter}
             yearFilter={yearFilter}
@@ -118,8 +99,8 @@ export default function ContentArea() {
             handleYearFilterChange={handleYearFilterChange}
             handleSearchChange={handleSearchChange}
         />
-        {moviesError ? <p className="fallback-message">{moviesError}</p> : 
-            <div className="content" id="content-grid">
+        {moviesError ? <p className={styles['fallback-message']}>{moviesError}</p> :
+            <div className={styles.content} id="content-grid">
                 {movies.map((movie) => (
                     <MovieCard key={movie.id} movie={movie} genres={genres} />
                 ))}
