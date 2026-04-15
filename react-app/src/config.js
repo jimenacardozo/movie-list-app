@@ -1,3 +1,3 @@
 export const CONFIG = {
-    API_KEY:"VITE_TMDB_TOKEN"
+    API_KEY: import.meta.env.VITE_TMDB_TOKEN
 };

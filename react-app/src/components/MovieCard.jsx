@@ -1,8 +1,10 @@
+ import fallbackPoster from '../assets/fallbackPoster.png';
+
 export default function MovieCard ({movie, genres}) {
     const year = movie.release_date?.split('-')[0] ?? '—';
         const posterSrc = movie.poster_path
         ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
-        : '/src/assets/fallbackPoster.png';
+        : fallbackPoster;
     return (
         <div className="movie-card">
             <div className="movie-card-image-container">
