@@ -1,0 +1,17 @@
+.content-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.fallback-message {
+    color: #7d7d7f;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
