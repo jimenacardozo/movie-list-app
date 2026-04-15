@@ -1,0 +1,35 @@
+.content-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.fallback-message {
+    color: #7d7d7f;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.login-button {
+    align-self: flex-end;
+    margin: 0.8rem 1rem 0;
+    padding: 0.5rem 1.2rem;
+    background-color: #e97c48;
+    color: black;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #d46b39;
+}
