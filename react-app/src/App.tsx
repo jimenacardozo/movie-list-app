@@ -9,7 +9,7 @@ import './styles.css'
 import { useState } from 'react'
 
 function App() {
-  const { movies, genres, error } = useMovies();
+  const { genres, movies, totalPages, currentPage, error, setCurrentPage} = useMovies()
 
   const [genreFilter, setGenreFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
@@ -35,7 +35,11 @@ function App() {
           genres={genres}
           error={error}
         />
-        <Pagination />
+        <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        />
       </section>
       <Footer />
     </>

@@ -8,7 +8,7 @@ description: Use when converting HTML/JS snippets to React TSX one at a time, re
 ## Scope
 
 **Does:**
-- Convert a single HTML snippet or JS pattern to JSX
+- Convert a single HTML snippet or JS pattern to TSX
 - Review a user's React attempt and fix only what's broken
 - Provide the correct React pattern for TMDB fetch calls, loading states, and movie rendering
 
@@ -78,7 +78,7 @@ style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdr
 
 ## Examples
 
-### 1. Movie Card — HTML to JSX
+### 1. Movie Card — HTML to SX
 
 **Input:**
 ```html
