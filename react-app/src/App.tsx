@@ -18,7 +18,10 @@ function App() {
   return (
     <>
       <Header />
-      <Hero />
+      <Hero
+        movies={movies}
+        genres={genres}
+      />
       <section className="content-area">
         <Filters 
           genres={genres}
@@ -36,9 +39,9 @@ function App() {
           error={error}
         />
         <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
         />
       </section>
       <Footer />

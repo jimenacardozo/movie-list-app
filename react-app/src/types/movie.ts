@@ -1,4 +1,8 @@
 export interface Movie {
+  duration: any;
+  overview: any;
+  trailerURL: any;
+  backdrop_path: any;
   id: number;
   title: string;
   genre_ids: number[];

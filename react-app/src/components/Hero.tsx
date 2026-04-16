@@ -1,30 +1,8 @@
-export default function Hero() {
-    const mockGenres = {
-        28: "Acción",
-        878: "Ciencia Ficción",
-        12: "Aventura",
-        16: "Animación"
-    };
+import { Movie } from '../types/movie';
 
-    const mockMovies = {
-        results: [
-            {
-                id: 1,
-                title: "Inception",
-                release_date: "2010-07-15",
-                poster_path: "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
-                backdrop_path: "/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg",
-                vote_average: 8.8,
-                genre_ids: [28, 878, 12],
-                overview: "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños, recibe la tarea inversa de plantar una idea en la mente de un CEO.",
-                duration: "148 min",
-                trailerURL: "https://www.youtube.com/watch?v=YoHD9XEInc0"
-            },
-        ]
-    };
-
-    const movie = mockMovies.results[0];
-
+export default function Hero( {genres, movies} : {genres: Record<number, string>, movies: Movie[] | null} ) {
+    if (!movies || movies.length === 0) return null;
+    const movie = movies[0];
     const heroData = {
         title: movie.title,
         releaseYear: movie.release_date.split('-')[0],
@@ -33,7 +11,7 @@ export default function Hero() {
         trailerURL: movie.trailerURL,
         genres: movie.genre_ids.map(id => ({
             id: id,
-            name: mockGenres[id]
+            name: genres[id]
         }))
     };
 
