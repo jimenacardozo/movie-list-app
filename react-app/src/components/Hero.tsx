@@ -1,12 +1,25 @@
-import { Movie } from '../types/movie';
+import { useEffect, useState } from 'react';
+import { fetchMovieDetails } from '../movieService';
+import { Movie, MovieDetails } from '../types/movie';
 
 export default function Hero( {genres, movies} : {genres: Record<number, string>, movies: Movie[] | null} ) {
+    const [details, setDetails] = useState<MovieDetails>({});
+
+    const movie = movies?.[0];
+
+    useEffect(() => {
+        if (!movie) return;
+        fetchMovieDetails(movie.id)
+            .then(details => setDetails(details))
+            .catch(err => console.error('Error fetching movie details:', err));
+    }, [movie]);
+
     if (!movies || movies.length === 0) return null;
-    const movie = movies[0];
     const heroData = {
         title: movie.title,
         releaseYear: movie.release_date.split('-')[0],
-        duration: movie.duration,
+        rating: movie.vote_average.toFixed(1),
+        duration: `${Math.floor(details.runtime / 60)}h ${details.runtime % 60}m`,
         overview: movie.overview,
         trailerURL: movie.trailerURL,
         genres: movie.genre_ids.map(id => ({
@@ -29,6 +42,7 @@ export default function Hero( {genres, movies} : {genres: Record<number, string>
                     <span className="trending-tag">#1 Trending</span>
                     <h1>{heroData.title}</h1>
                     <div className="hero-movie-details">
+                        <span className="rating">★ {heroData.rating}</span>
                         <span className="year">{heroData.releaseYear}</span>
                         <span className="duration">◴ {heroData.duration}</span>
                         <div>

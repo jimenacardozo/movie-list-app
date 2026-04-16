@@ -14,9 +14,11 @@ description: Use when converting HTML/JS snippets to React TSX one at a time, re
 
 **Does NOT:**
 - Migrate full files — always one component or pattern at a time
-- Make architecture or folder structure decisions
-- Add custom hooks, memoization, or anything not asked for
+- Make architecture, folder structure, or naming decisions
+- Add custom hooks, memoization, useCallback, or anything not asked for
 - Explain React concepts beyond a one-line note on each fix
+
+---
 
 ## HTML → TSX Quick Reference
 
@@ -26,47 +28,69 @@ description: Use when converting HTML/JS snippets to React TSX one at a time, re
 | `for=` | `htmlFor=` |
 | `onclick="fn()"` | `onClick={fn}` |
 | `onclick="fn(x)"` | `onClick={() => fn(x)}` |
-| `<img src="...">` | `<img src="..." />` (self-close) |
+| `<img src="...">` | `<img src="..." alt="description" />` — alt required |
 | `style="color: red"` | `style={{ color: 'red' }}` |
 | `<!-- comment -->` | `{/* comment */}` |
-| Conditional in template | `{condition && <El />}` |
-| Loop in template | `{arr.map(x => <El key={x.id} />)}` |
+| Conditional | `{condition && <El />}` |
+| Loop | `{arr.map(x => <El key={x.id} />)}` — key always required |
 
+---
 
-## TypeScript Basics (apply only when needed)
+## TypeScript Rules (apply only when needed)
 
-- Use `useState<Type | null>(null)` for single objects
-- Use `useState<Type[]>([])` for lists
-- Type props minimally when creating components
-- Avoid over-typing — prioritize clarity over completeness
+- Single object: `useState<Movie | null>(null)`
+- List: `useState<Movie[]>([])`
+- Type props inline, minimally — only what the component actually uses
+- Avoid `any` — use `unknown` if the shape is unclear
+- Avoid over-typing — clarity over completeness
+
+### Minimal Movie type (reference)
+```ts
+type Movie = {
+  id: number;
+  title: string;
+  poster_path: string;
+  backdrop_path: string;
+  overview: string;
+};
+```
+
+---
 
 ## TMDB Patterns
 
-### Fetch + Loading State
+### Fetch + Loading + Error
 ```tsx
-const [items, setItems] = useState([]);
+const [items, setItems] = useState<Movie[]>([]);
 const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
 
 useEffect(() => {
   fetch(`${BASE_URL}/endpoint?api_key=${API_KEY}`)
-    .then(res => res.json())
-    .then(data => {
-      setItems(data.results);
-      setLoading(false);
-    });
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch');
+      return res.json();
+    })
+    .then(data => setItems(data.results))
+    .catch(err => setError(err.message))
+    .finally(() => setLoading(false));
 }, []);
 ```
 
-### Render List with Loading
+### Render with Loading + Error
 ```tsx
-{loading ? <p>Loading...</p> : items.map(item => (
-  <MovieCard key={item.id} movie={item} />
-))}
+if (loading) return <p>Loading...</p>;
+if (error) return <p>Error: {error}</p>;
+
+return items.map(item => <MovieCard key={item.id} movie={item} />);
 ```
 
 ### Poster Image
 ```tsx
-<img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+<img
+  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+  alt={movie.title}
+/>
 ```
 
 ### Background Image (Hero)
@@ -78,7 +102,7 @@ style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdr
 
 ## Examples
 
-### 1. Movie Card — HTML to SX
+### 1. Movie Card — HTML to TSX
 
 **Input:**
 ```html
@@ -98,7 +122,7 @@ type Props = {
 function MovieCard({ movie, openModal }: Props) {
   return (
     <div className="movie-card" onClick={() => openModal(movie)}>
-      <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+      <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
       <p className="title">{movie.title}</p>
     </div>
   );
@@ -107,7 +131,7 @@ function MovieCard({ movie, openModal }: Props) {
 
 ---
 
-### 2. Fetch Call — Vanilla JS to React Hook
+### 2. Fetch Call — Vanilla JS to React
 
 **Input:**
 ```ts
@@ -123,13 +147,13 @@ const [hero, setHero] = useState<Movie | null>(null);
 useEffect(() => {
   fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`)
     .then(res => res.json())
-    .then((data) => setHero(data.results[0]));
+    .then(data => setHero(data.results[0]));
 }, []);
 ```
 
 ---
 
-### 3. Hero Section — Correct a React Attempt
+### 3. Hero Section — Fix a React Attempt
 
 **User attempt:**
 ```tsx
@@ -145,6 +169,6 @@ function Hero() {
 ```
 
 **Fix only what's wrong:**
-- `useState([])` → `useState(null)` — hero is one object, not a list
+- `useState([])` → `useState<Movie | null>(null)` — hero is one object, not a list
 - `class=` → `className=`
 - `style="..."` → `style={{ backgroundImage: 'url(...)' }}` — style takes an object, camelCase properties
