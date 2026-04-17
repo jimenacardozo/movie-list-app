@@ -4,12 +4,14 @@ import Filters from './components/Filters'
 import ContentGrid from './components/ContentGrid'
 import Pagination from './components/Pagination'
 import Footer from './components/Footer'
-import { useMovies } from './hooks/useMovies'
+import useMovies from './hooks/useMovies'
+import useMovieDetails from './hooks/useMovieDetails'
 import './styles.css'
 import { useState } from 'react'
 
 function App() {
   const { genres, movies, totalPages, currentPage, error, setCurrentPage} = useMovies()
+  const details = useMovieDetails(movies?.[0] ?? null);
 
   const [genreFilter, setGenreFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
@@ -21,6 +23,7 @@ function App() {
       <Hero
         movies={movies}
         genres={genres}
+        details={details}
       />
       <section className="content-area">
         <Filters 

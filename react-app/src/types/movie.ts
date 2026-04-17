@@ -26,3 +26,10 @@ export interface MovieDetails {
         }[];
     };
 }
+
+export interface MovieSearchParams {
+    query?: string;
+    primary_release_year?: string | number;
+    with_genres?: string | number;
+    page?: number;
+}

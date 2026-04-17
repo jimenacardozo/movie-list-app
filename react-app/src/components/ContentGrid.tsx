@@ -1,5 +1,5 @@
 import MovieCard from "./MovieCard";
-import { Movie, Genre } from '../types/movie';
+import { Movie } from '../types/movie';
 
 interface ContentGridProps {
     movies: Movie[] | null; 

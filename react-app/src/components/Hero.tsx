@@ -1,20 +1,10 @@
-import { useEffect, useState } from 'react';
-import { fetchMovieDetails } from '../movieService';
 import { Movie, MovieDetails } from '../types/movie';
 
-export default function Hero( {genres, movies} : {genres: Record<number, string>, movies: Movie[] | null} ) {
-    const [details, setDetails] = useState<MovieDetails>({});
-
-    const movie = movies?.[0];
-
-    useEffect(() => {
-        if (!movie) return;
-        fetchMovieDetails(movie.id)
-            .then(details => setDetails(details))
-            .catch(err => console.error('Error fetching movie details:', err));
-    }, [movie]);
+export default function Hero( {genres, movies, details} : {genres: Record<number, string>, movies: Movie[] | null, details: MovieDetails} ) {
+    const movie: Movie = movies[0];
 
     if (!movies || movies.length === 0) return null;
+
     const heroData = {
         title: movie.title,
         releaseYear: movie.release_date.split('-')[0],
@@ -29,12 +19,12 @@ export default function Hero( {genres, movies} : {genres: Record<number, string>
     };
 
     const posterSrc = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-    const backgroundSrc = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+    
     return (
         <section id="hero">
             <div
                 className="hero-background"
-                style={{ '--bg-image': `url(${posterSrc})` } as any}
+                style={{ '--bg-image': `url(${posterSrc})` } as React.CSSProperties}
             />
             <div className="hero-content">
                 <img className="hero-image" src={posterSrc} alt={heroData.title} />

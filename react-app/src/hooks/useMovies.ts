@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchTrendingMovies, fetchGenres } from '../movieService';
 import { Movie } from '../types/movie';
 
-export function useMovies() {
+export default function useMovies() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Record<number, string>>({});
   const [error, setError] = useState<string | null>(null);
