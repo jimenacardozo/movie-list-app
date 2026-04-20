@@ -1,6 +1,4 @@
-interface Genres {
-    [key: string]: string;
-}
+type Genres = Record<string, string>;
 
 interface FiltersProps {
     genres: Genres;
@@ -44,7 +42,7 @@ export default function Filters({
             <select
                 name="years"
                 className="filter-select"
-                value={yearFilter} // React maneja la selección aquí
+                value={yearFilter}
                 onChange={(e) => onYearChange(e.target.value)}
             >
                 <option value="">All Years</option>
@@ -57,7 +55,7 @@ export default function Filters({
                 type="search"
                 placeholder="Search movies..."
                 className="filter-select"
-                value={searchQuery} // Componente controlado
+                value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
             />
         </nav>

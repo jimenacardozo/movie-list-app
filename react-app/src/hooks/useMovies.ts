@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
-import { fetchTrendingMovies, fetchGenres } from '../movieService';
+import { fetchMovies, fetchGenres } from '../movieService';
 import { Movie } from '../types/movie';
 
-export default function useMovies() {
+interface UseMoviesFilters {
+  genreFilter: string;
+  yearFilter: string;
+  searchQuery: string;
+}
+
+export default function useMovies({ genreFilter, yearFilter, searchQuery }: UseMoviesFilters) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Record<number, string>>({});
   const [error, setError] = useState<string | null>(null);
@@ -10,25 +16,33 @@ export default function useMovies() {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    fetchGenres()
-      .then(genres => {
-        setGenres(genres);
-        return fetchTrendingMovies();
-      })
-      .then(movies => {
-        setMovies(movies.results);
-        setTotalPages(movies.total_pages);
-      }
-    )
-      .catch(err => setError(err.message));
-  }, [currentPage]);
+    setCurrentPage(1);
+  }, [genreFilter, yearFilter, searchQuery]);
 
-  return { 
-    movies, 
-    genres, 
-    error, 
-    currentPage, 
-    totalPages, 
-    setCurrentPage 
+  useEffect(() => {
+    fetchGenres()
+      .then(g => {
+        setGenres(g);
+        return fetchMovies({
+          page: currentPage,
+          with_genres: genreFilter,
+          primary_release_year: yearFilter,
+          query: searchQuery,
+        });
+      })
+      .then(data => {
+        setMovies(data.results);
+        setTotalPages(data.total_pages);
+      })
+      .catch(err => setError(err.message));
+  }, [currentPage, genreFilter, yearFilter, searchQuery]);
+
+  return {
+    movies,
+    genres,
+    error,
+    currentPage,
+    totalPages,
+    setCurrentPage
   };
 }

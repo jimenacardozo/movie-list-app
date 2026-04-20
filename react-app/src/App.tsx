@@ -10,12 +10,12 @@ import './styles.css'
 import { useState } from 'react'
 
 function App() {
-  const { genres, movies, totalPages, currentPage, error, setCurrentPage} = useMovies()
-  const details = useMovieDetails(movies?.[0] ?? null);
-
   const [genreFilter, setGenreFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { genres, movies, totalPages, currentPage, error, setCurrentPage} = useMovies({ genreFilter, yearFilter, searchQuery })
+  const details = useMovieDetails(movies?.[0] ?? null);
 
   return (
     <>
