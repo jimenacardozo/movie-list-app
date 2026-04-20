@@ -6,6 +6,7 @@ import Pagination from './components/Pagination'
 import Footer from './components/Footer'
 import useMovies from './hooks/useMovies'
 import useMovieDetails from './hooks/useMovieDetails'
+import useTrendingMovie from './hooks/useTrendingMovie'
 import './styles.css'
 import { useState } from 'react'
 
@@ -15,13 +16,14 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const { genres, movies, totalPages, currentPage, error, setCurrentPage} = useMovies({ genreFilter, yearFilter, searchQuery })
-  const details = useMovieDetails(movies?.[0] ?? null);
+  const trendingMovie = useTrendingMovie();
+  const details = useMovieDetails(trendingMovie);
 
   return (
     <>
       <Header />
       <Hero
-        movies={movies}
+        movie={trendingMovie}
         genres={genres}
         details={details}
       />

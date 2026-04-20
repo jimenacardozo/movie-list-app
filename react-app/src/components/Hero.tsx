@@ -1,9 +1,7 @@
 import { Movie, MovieDetails } from '../types/movie';
 
-export default function Hero( {genres, movies, details} : {genres: Record<number, string>, movies: Movie[] | null, details: MovieDetails} ) {
-    const movie: Movie = movies[0];
-
-    if (!movies || movies.length === 0) return null;
+export default function Hero( {genres, movie, details} : {genres: Record<number, string>, movie: Movie | null, details: MovieDetails} ) {
+    if (!movie) return null;
 
     const heroData = {
         title: movie.title,
