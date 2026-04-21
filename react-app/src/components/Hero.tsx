@@ -9,7 +9,7 @@ export default function Hero( {genres, movie, details} : {genres: Record<number,
         rating: movie.vote_average.toFixed(1),
         duration: `${Math.floor(details.runtime / 60)}h ${details.runtime % 60}m`,
         overview: movie.overview,
-        trailerURL: movie.trailerURL,
+        trailerURL: details.trailerURL,
         genres: movie.genre_ids.map(id => ({
             id: id,
             name: genres[id]

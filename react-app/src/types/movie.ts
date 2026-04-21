@@ -18,6 +18,7 @@ export interface Genre {
 
 export interface MovieDetails {
     runtime?: number;
+    trailerURL?: string | null; 
     videos?: {
         results: {
             site: string;
