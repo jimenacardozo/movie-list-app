@@ -7,7 +7,7 @@ export default function MovieCard({ movie, genres }: {
 }) {
     const year = movie.release_date?.split('-')[0] ?? '—';
         const posterSrc = movie.poster_path
-        ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+        ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
         : fallbackPoster;
     return (
         <div className="movie-card">
@@ -15,7 +15,7 @@ export default function MovieCard({ movie, genres }: {
                 <div className="movie-rating-tag">
                     ★ {movie.vote_average.toFixed(1)}
                 </div>
-                <img src={posterSrc} alt={movie.title} />
+                <img src={posterSrc} alt={movie.title} loading="lazy" />
             </div>
             <h2>{movie.title}</h2>
             <span className="movie-card-release-date">{year}</span>

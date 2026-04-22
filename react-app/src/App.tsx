@@ -8,7 +8,6 @@ import useMovies from './hooks/useMovies'
 import useMovieDetails from './hooks/useMovieDetails'
 import useTrendingMovie from './hooks/useTrendingMovie'
 import './styles.css'
-import { useState } from 'react'
 
 function App() {
   const {
@@ -19,7 +18,7 @@ function App() {
     totalPages,
     genreFilter,
     yearFilter,
-    searchQuery,
+    searchInput,
     handleGenreChange,
     handleYearChange,
     setSearchQueryDebounced,
@@ -41,7 +40,7 @@ function App() {
           genres={genres}
           genreFilter={genreFilter}
           yearFilter={yearFilter}
-          searchQuery={searchQuery}
+          searchQuery={searchInput}
           onGenreChange={handleGenreChange}
           onYearChange={handleYearChange}
           onSearchChange={setSearchQueryDebounced}

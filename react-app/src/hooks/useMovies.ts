@@ -31,6 +31,7 @@ export default function useMovies() {
   const [genreFilter, setGenreFilter] = useState(initial.genreFilter);
   const [yearFilter, setYearFilter] = useState(initial.yearFilter);
   const [searchQuery, setSearchQuery] = useState(initial.searchQuery);
+  const [searchInput, setSearchInput] = useState(initial.searchQuery);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -94,6 +95,7 @@ export default function useMovies() {
       setGenreFilter(params.genreFilter);
       setYearFilter(params.yearFilter);
       setSearchQuery(params.searchQuery);
+      setSearchInput(params.searchQuery);
     }
     window.addEventListener('popstate', handlePopState);
     return () => {
@@ -121,6 +123,7 @@ export default function useMovies() {
   };
 
   const setSearchQueryDebounced = useCallback((value) => {
+      setSearchInput(value);
       if (debounceRef.current) clearTimeout(debounceRef.current);
         debounceRef.current = setTimeout(() => {
             setCurrentPage(1);
@@ -137,6 +140,7 @@ export default function useMovies() {
     genreFilter,
     yearFilter,
     searchQuery,
+    searchInput,
     handleGenreChange,
     handleYearChange,
     setSearchQueryDebounced,
