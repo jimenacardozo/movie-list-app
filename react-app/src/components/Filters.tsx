@@ -17,7 +17,7 @@ export default function Filters({
     searchQuery,
     onGenreChange,
     onYearChange,
-    onSearchChange
+    onSearchChange,
 }: FiltersProps) {
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - 1887 + 1 }, (_, i) => currentYear - i);
