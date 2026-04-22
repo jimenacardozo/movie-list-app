@@ -1,18 +1,11 @@
 import { useState, useEffect, useCallback, use, useRef } from 'react';
 import { fetchMovies, fetchGenres } from '../movieService';
-import { Movie } from '../types/movie';
+import { Movie, MovieSearchParams } from '../types/movie';
 
 interface UseMoviesFilters {
   genreFilter: string;
   yearFilter: string;
   searchQuery: string;
-}
-
-interface Params {
-  query?: string;
-  with_genres?: string;
-  primary_release_year?: string;
-  page?: number;
 }
 
 function readParamsFromURL(): UseMoviesFilters {
@@ -51,7 +44,7 @@ export default function useMovies() {
   }, [currentPage, genreFilter, yearFilter, searchQuery]);
 
   const buildParams = useCallback(() => {
-    const params: Params= {};
+    const params: MovieSearchParams = {};
     if (searchQuery.trim()) {
       params.query = searchQuery.trim();
     } else {
