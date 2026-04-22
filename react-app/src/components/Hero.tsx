@@ -1,4 +1,5 @@
 import { Movie, MovieDetails } from '../types/movie';
+import styles from './Hero.module.css';
 
 export default function Hero( {genres, movie, details} : {genres: Record<number, string>, movie: Movie | null, details: MovieDetails} ) {
     if (!movie) return null;
@@ -19,29 +20,29 @@ export default function Hero( {genres, movie, details} : {genres: Record<number,
     const posterSrc = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
     
     return (
-        <section id="hero">
+        <section className={styles.hero}>
             <div
-                className="hero-background"
+                className={styles.heroBackground}
                 style={{ '--bg-image': `url(${posterSrc})` } as React.CSSProperties}
             />
-            <div className="hero-content">
-                <img className="hero-image" src={posterSrc} alt={heroData.title} />
-                <div className="hero-info">
-                    <span className="trending-tag">#1 Trending</span>
+            <div className={styles.heroContent}>
+                <img className={styles.heroImage} src={posterSrc} alt={heroData.title} />
+                <div className={styles.heroInfo}>
+                    <span className={styles.trendingTag}>#1 Trending</span>
                     <h1>{heroData.title}</h1>
-                    <div className="hero-movie-details">
-                        <span className="rating">★ {heroData.rating}</span>
-                        <span className="year">{heroData.releaseYear}</span>
-                        <span className="duration">◴ {heroData.duration}</span>
+                    <div className={styles.heroMovieDetails}>
+                        <span className={styles.rating}>★ {heroData.rating}</span>
+                        <span className={styles.year}>{heroData.releaseYear}</span>
+                        <span className={styles.duration}>◴ {heroData.duration}</span>
                         <div>
                             {heroData.genres.map((genre) =>(
-                                <span key={genre.id} className="genre">{genre.name}</span>
+                                <span key={genre.id} className={styles.genre}>{genre.name}</span>
                             ))}
                         </div>
                     </div>
-                    <p className="hero-description">{heroData.overview}</p>
+                    <p className={styles.heroDescription}>{heroData.overview}</p>
                     {heroData.trailerURL && (
-                        <a href={heroData.trailerURL} target="_blank" rel="noreferrer" className="button-trailer">▶ Watch Trailer</a>
+                        <a href={heroData.trailerURL} target="_blank" rel="noreferrer" className={styles.buttonTrailer}>▶ Watch Trailer</a>
                     )}
                 </div>
             </div>
