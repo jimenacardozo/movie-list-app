@@ -1,8 +1,6 @@
 export interface Movie {
   vote_average: number;
-  duration: number;
   overview: string;
-  trailerURL: string;
   backdrop_path: string;
   id: number;
   title: string;
