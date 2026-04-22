@@ -51,3 +51,34 @@ describe('Hero', () => {
         expect(screen.getByText('Science Fiction')).toBeInTheDocument();
     });
 });
+
+describe('Hero when movie is null', () => {
+    it('does not render anything', () => {
+        const { container } = render(<Hero movie={null} details={mockDetails} genres={mockGenres} />);
+        expect(container).toBeEmptyDOMElement();
+    });
+
+    it('does not show the title of any movie', () => {
+        render(<Hero movie={null} details={mockDetails} genres={mockGenres} />);
+        expect(screen.queryByText('Inception')).not.toBeInTheDocument();
+    });
+});
+
+describe('Hero - link Watch Trailer', () => {
+    it('shows the link when there is a trailerURL', () => {
+        render(<Hero movie={mockMovie} details={mockDetails} genres={mockGenres} />);
+
+        const trailerLink = screen.getByRole('link', { name: /watch trailer/i });
+
+        expect(trailerLink).toBeInTheDocument();
+        expect(trailerLink).toHaveAttribute('href', 'https://youtube.com/watch?v=abc');
+        expect(trailerLink).toHaveAttribute('target', '_blank');
+    });
+
+    it('does not show the link when there is no trailerURL', () => {
+        const detailsSinTrailer: MovieDetails = { runtime: 148, trailerURL: null };
+        render(<Hero movie={mockMovie} details={detailsSinTrailer} genres={mockGenres} />);
+
+        expect(screen.queryByRole('link', { name: /watch trailer/i })).not.toBeInTheDocument();
+    });
+});
