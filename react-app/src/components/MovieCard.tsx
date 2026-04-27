@@ -1,6 +1,5 @@
 import fallbackPoster from '../assets/fallbackPoster.png';
 import { Movie } from '../types/movie';
-import styles from './MovieCard.module.css';
 
 export default function MovieCard({ movie, genres }: {
     movie: Movie;
@@ -11,18 +10,20 @@ export default function MovieCard({ movie, genres }: {
         ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
         : fallbackPoster;
     return (
-        <div className={styles.movieCard}>
-            <div className={styles.movieCardImageContainer}>
-                <div className={styles.movieRatingTag}>
+        <div className="bg-[#0e1011] border border-[#232426] rounded-xl m-4 min-w-44 w-1/5 max-w-xs overflow-hidden">
+            <div className="relative">
+                <div className="absolute right-0 border border-[#232426] rounded-xl font-semibold text-[0.8rem] text-[#E57C46] bg-[#0F0C10] p-[0.3rem] m-[0.3rem]">
                     ★ {movie.vote_average.toFixed(1)}
                 </div>
-                <img src={posterSrc} alt={movie.title} loading="lazy" />
+                <img className="w-full" src={posterSrc} alt={movie.title} loading="lazy" />
             </div>
-            <h2>{movie.title}</h2>
-            <span className={styles.movieCardReleaseDate}>{year}</span>
-            <div className={styles.genreLabels}>
+            <h2 className="px-[0.3rem] py-[0.3rem] text-[1rem] text-white">
+                {movie.title}
+            </h2>
+            <span className="pl-[0.3rem]">{year}</span> 
+            <div className="flex flex-wrap">
                 {movie.genre_ids.map((id) => (
-                    <span key={id} className={styles.genreLabel}>
+                    <span key={id} className="text-[0.8rem] text-[#7d7d7f] border border-[#232426] rounded-xl bg-[#0e0f11] px-[0.3rem] py-[0.3rem] m-[0.3rem]">
                         {genres[id]}
                     </span>
                 ))}

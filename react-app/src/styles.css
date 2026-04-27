@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 html {
     background-color: #060709;
     font-family: 'Geist', sans-serif;
@@ -23,8 +25,6 @@ footer span {
 }
 
 .home {
-    display: flex;
-    align-items: center;
     text-decoration: none;
     color: white;
 }
